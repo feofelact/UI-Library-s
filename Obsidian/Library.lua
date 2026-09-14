@@ -16,16 +16,16 @@ local UDim2_new, UDim2_fromScale, UDim2_fromOffset, UDim_new = UDim2.new, UDim2.
 local CFrame_Angles, CFrame_new = CFrame.Angles, CFrame.new;
 local math_clamp, math_abs, math_round, math_floor, math_huge, math_sin, math_cos, math_tan, math_atan2, math_pi, math_min, math_deg, math_rad, math_max, math_random = math.clamp, math.abs, math.round, math.floor, math.huge, math.sin, math.cos, math.tan, math.atan2, math.pi, math.min, math.deg, math.rad, math.max, math.random;
 local Drawing_new, Rect_new, Font_new, ColorSequence_new, ColorSequenceKeypoint_new, TweenInfo_new, NumberSequence_new, NumberSequenceKeypoint_new = Drawing.new, Rect.new, Font.new, ColorSequence.new, ColorSequenceKeypoint.new, TweenInfo.new, NumberSequence.new, NumberSequenceKeypoint.new;
-local FindFirstChild, FindFirstChildOfClass, GetChildren, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
+local FindFirstChild, FindFirstChildOfClass, GetChildren, GetService, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetService, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
 --
-local CoreGui = CloneReference(game:GetService("CoreGui"))
-local Players = CloneReference(game:GetService("Players"))
-local RunService = CloneReference(game:GetService("RunService"))
-local SoundService = CloneReference(game:GetService("SoundService"))
-local UserInputService = CloneReference(game:GetService("UserInputService"))
-local TextService = CloneReference(game:GetService("TextService"))
-local Teams = CloneReference(game:GetService("Teams"))
-local TweenService = CloneReference(game:GetService("TweenService"))
+local CoreGui = CloneReference(GetService("CoreGui"))
+local Players = CloneReference(GetService("Players"))
+local RunService = CloneReference(GetService("RunService"))
+local SoundService = CloneReference(GetService("SoundService"))
+local UserInputService = CloneReference(GetService("UserInputService"))
+local TextService = CloneReference(GetService("TextService"))
+local Teams = CloneReference(GetService("Teams"))
+local TweenService = CloneReference(GetService("TweenService"))
 --
 local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local Mouse = CloneReference(LocalPlayer:GetMouse())
@@ -96,7 +96,7 @@ local Library = {
     Scheme = {
         BackgroundColor = Color3.fromRGB(15, 15, 15),
         MainColor = Color3.fromRGB(25, 25, 25),
-        AccentColor = Color3.fromRGB(216, 126, 157),
+        AccentColor = Color3.fromRGB(125, 85, 255),
         OutlineColor = Color3.fromRGB(40, 40, 40),
         FontColor = Color3.new(1, 1, 1),
         Font = Font.fromEnum(Enum.Font.Code),
@@ -5683,9 +5683,9 @@ local FooterLabel = New("TextLabel", {
         })
 
         Container = New("Frame", {
-	        BackgroundColor3 = Library.Scheme.BackgroundColor,
+	        BackgroundColor3 = function() return Library:GetBetterColor(Library.Scheme.BackgroundColor, 1) end,
 	        Name = "Container",
-	        Position = UDim2.fromOffset(0, 90),
+	        Position = UDim2.fromOffset(0, 90), 
 	        Size = UDim2.new(1, 0, 1, -90),
 	        Parent = MainFrame,
         })
