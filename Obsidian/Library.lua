@@ -16,16 +16,16 @@ local UDim2_new, UDim2_fromScale, UDim2_fromOffset, UDim_new = UDim2.new, UDim2.
 local CFrame_Angles, CFrame_new = CFrame.Angles, CFrame.new;
 local math_clamp, math_abs, math_round, math_floor, math_huge, math_sin, math_cos, math_tan, math_atan2, math_pi, math_min, math_deg, math_rad, math_max, math_random = math.clamp, math.abs, math.round, math.floor, math.huge, math.sin, math.cos, math.tan, math.atan2, math.pi, math.min, math.deg, math.rad, math.max, math.random;
 local Drawing_new, Rect_new, Font_new, ColorSequence_new, ColorSequenceKeypoint_new, TweenInfo_new, NumberSequence_new, NumberSequenceKeypoint_new = Drawing.new, Rect.new, Font.new, ColorSequence.new, ColorSequenceKeypoint.new, TweenInfo.new, NumberSequence.new, NumberSequenceKeypoint.new;
-local FindFirstChild, FindFirstChildOfClass, GetChildren, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
+local FindFirstChild, FindFirstChildOfClass, GetChildren, GetService, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetService, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
 --
-local CoreGui: CoreGui = CloneReference(game:GetService("CoreGui"))
-local Players: Players = CloneReference(game:GetService("Players"))
-local RunService: RunService = CloneReference(game:GetService("RunService"))
-local SoundService: SoundService = CloneReference(game:GetService("SoundService"))
-local UserInputService: UserInputService = CloneReference(game:GetService("UserInputService"))
-local TextService: TextService = CloneReference(game:GetService("TextService"))
-local Teams: Teams = CloneReference(game:GetService("Teams"))
-local TweenService: TweenService = CloneReference(game:GetService("TweenService"))
+local CoreGui = CloneReference(GetService("CoreGui"))
+local Players = CloneReference(GetService("Players"))
+local RunService = CloneReference(GetService("RunService"))
+local SoundService = CloneReference(GetService("SoundService"))
+local UserInputService = CloneReference(GetService("UserInputService"))
+local TextService = CloneReference(GetService("TextService"))
+local Teams = CloneReference(GetService("Teams"))
+local TweenService = CloneReference(GetService("TweenService"))
 --
 local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local Mouse = CloneReference(LocalPlayer:GetMouse())
@@ -386,23 +386,16 @@ local function WaitForEvent(Event, Timeout, Condition)
 end
 
 local function IsMouseInput(Input: InputObject, IncludeM2: boolean?)
-    return Input.UserInputType == Enum.UserInputType.MouseButton1
-        or (IncludeM2 == true and Input.UserInputType == Enum.UserInputType.MouseButton2)
-        or Input.UserInputType == Enum.UserInputType.Touch
+    return Input.UserInputType == Enum.UserInputType.MouseButton1 or (IncludeM2 == true and Input.UserInputType == Enum.UserInputType.MouseButton2) or Input.UserInputType == Enum.UserInputType.Touch
 end
 local function IsClickInput(Input: InputObject, IncludeM2: boolean?)
-    return IsMouseInput(Input, IncludeM2)
-        and Input.UserInputState == Enum.UserInputState.Begin
-        and Library.IsRobloxFocused
+    return IsMouseInput(Input, IncludeM2) and Input.UserInputState == Enum.UserInputState.Begin and Library.IsRobloxFocused
 end
 local function IsHoverInput(Input: InputObject)
-    return (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch)
-        and Input.UserInputState == Enum.UserInputState.Change
+    return (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) and Input.UserInputState == Enum.UserInputState.Change
 end
 local function IsDragInput(Input: InputObject, IncludeM2: boolean?)
-    return IsMouseInput(Input, IncludeM2)
-        and (Input.UserInputState == Enum.UserInputState.Begin or Input.UserInputState == Enum.UserInputState.Change)
-        and Library.IsRobloxFocused
+    return IsMouseInput(Input, IncludeM2) and (Input.UserInputState == Enum.UserInputState.Begin or Input.UserInputState == Enum.UserInputState.Change) and Library.IsRobloxFocused
 end
 
 local function GetTableSize(Table: { [any]: any })
@@ -5533,12 +5526,8 @@ else
     })
 end
 
-local X = Library:GetTextBounds(
-    WindowInfo.Title,
-    Library.Scheme.Font,
-    20,
-    TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12
-)
+local X = Library:GetTextBounds(WindowInfo.Title, Library.Scheme.Font, 20, TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12)
+
 WindowTitle = New("TextLabel", {
     BackgroundTransparency = 1,
     Size = UDim2.new(0, X, 1, 0),
@@ -5662,6 +5651,7 @@ local FooterLabel = New("TextLabel", {
                 Parent = SearchBox,
             })
         end
+
         New("ImageLabel", {
             Image = ResizeIcon and ResizeIcon.Url or "",
             ImageColor3 = "FontColor",
@@ -5674,16 +5664,17 @@ local FooterLabel = New("TextLabel", {
         })
 
         Tabs = New("ScrollingFrame", {
-            AutomaticCanvasSize = Enum.AutomaticSize.None,
-            BackgroundColor3 = "BackgroundColor",
-            BackgroundTransparency = 1,
-            CanvasSize = UDim2.fromScale(0, 0),
-            Position = UDim2.new(0.5, -160, 1, -40),
-            ScrollBarThickness = 0,
-            ScrollingDirection = Enum.ScrollingDirection.X,
-            Size = UDim2.new(0, 320, 0, 40),
-            Parent = MainFrame,
+	        AutomaticCanvasSize = Enum.AutomaticSize.None,
+	        BackgroundColor3 = "BackgroundColor",
+	        BackgroundTransparency = 1,
+	        CanvasSize = UDim2.fromScale(0, 0),
+	        Position = UDim2.fromOffset(0, 49),
+	        ScrollBarThickness = 0,
+	        ScrollingDirection = Enum.ScrollingDirection.X,
+	        Size = UDim2.new(1, 0, 0, 40),
+	        Parent = MainFrame,
         })
+
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
             HorizontalAlignment = Enum.HorizontalAlignment.Center,
@@ -5692,14 +5683,13 @@ local FooterLabel = New("TextLabel", {
         })
 
         Container = New("Frame", {
-            BackgroundColor3 = function()
-                return Library:GetBetterColor(Library.Scheme.BackgroundColor, 1)
-            end,
-            Name = "Container",
-            Position = UDim2.fromOffset(0, 49),
-            Size = UDim2.new(1, 0, 1, -89),
-            Parent = MainFrame,
+	        BackgroundColor3 = function() return Library:GetBetterColor(Library.Scheme.BackgroundColor, 1) end,
+	        Name = "Container",
+	        Position = UDim2.fromOffset(0, 90),
+	        Size = UDim2.new(1, 0, 1, -90),
+	        Parent = MainFrame,
         })
+
         New("UIPadding", {
             PaddingBottom = UDim.new(0, 0),
             PaddingLeft = UDim.new(0, 6),
