@@ -110,7 +110,7 @@ function ImageManager:SetLibrary(Library)
     Library.ImageManager = self
 
     for AssetName, _ in ImageManagerAssets do
-        Self.DownloadAsset(AssetName)
+        self.DownloadAsset(AssetName)
     end
 
     return self
