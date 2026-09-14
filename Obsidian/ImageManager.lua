@@ -98,22 +98,22 @@ function ImageManager.DownloadAsset(AssetName: string, ForceRedownload: boolean?
         return true, nil
     end
 
-    local success, errorMessage = pcall(function()
+    local Success, Error = pcall(function()
         writefile(AssetData.Path, game:HttpGet(AssetData.URL))
     end)
 
-    return success, errorMessage
+    return Success, Error
 end
 
 function ImageManager:SetLibrary(Library)
     Library = Library
-    Library.ImageManager = Self
+    Library.ImageManager = self
 
     for AssetName, _ in ImageManagerAssets do
         Self.DownloadAsset(AssetName)
     end
 
-    return Self
+    return self
 end
 
 return ImageManager
