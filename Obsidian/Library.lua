@@ -3,7 +3,7 @@ local getgenv = getgenv or function() return Shared end
 local setclipboard = setclipboard or nil
 local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
 local GetHui = gethui or function() return CoreGui end
---
+-- 
 local Instance_new = Instance.new;
 local Color3_fromRGB, Color3_new, Color3_fromHSV, Color3_fromHex = Color3.fromRGB, Color3.new, Color3.fromHSV, Color3.fromHex;
 local table_clear, table_insert, table_remove, table_unpack, table_find, table_sort, table_concat = table.clear, table.insert, table_remove, table_unpack, table_find, table_sort, table_concat;
@@ -16,16 +16,16 @@ local UDim2_new, UDim2_fromScale, UDim2_fromOffset, UDim_new = UDim2.new, UDim2.
 local CFrame_Angles, CFrame_new = CFrame.Angles, CFrame.new;
 local math_clamp, math_abs, math_round, math_floor, math_huge, math_sin, math_cos, math_tan, math_atan2, math_pi, math_min, math_deg, math_rad, math_max, math_random = math.clamp, math.abs, math.round, math.floor, math.huge, math.sin, math.cos, math.tan, math.atan2, math.pi, math.min, math.deg, math.rad, math.max, math.random;
 local Drawing_new, Rect_new, Font_new, ColorSequence_new, ColorSequenceKeypoint_new, TweenInfo_new, NumberSequence_new, NumberSequenceKeypoint_new = Drawing.new, Rect.new, Font.new, ColorSequence.new, ColorSequenceKeypoint.new, TweenInfo.new, NumberSequence.new, NumberSequenceKeypoint.new;
-local FindFirstChild, FindFirstChildOfClass, GetChildren, GetService, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetService, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
+local FindFirstChild, FindFirstChildOfClass, GetChildren,, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
 --
-local CoreGui = CloneReference(GetService("CoreGui"))
-local Players = CloneReference(GetService("Players"))
-local RunService = CloneReference(GetService("RunService"))
-local SoundService = CloneReference(GetService("SoundService"))
-local UserInputService = CloneReference(GetService("UserInputService"))
-local TextService = CloneReference(GetService("TextService"))
-local Teams = CloneReference(GetService("Teams"))
-local TweenService = CloneReference(GetService("TweenService"))
+local CoreGui = CloneReference(game:GetService("CoreGui"))
+local Players = CloneReference(game:GetService("Players"))
+local RunService = CloneReference(game:GetService("RunService"))
+local SoundService = CloneReference(game:GetService("SoundService"))
+local UserInputService = CloneReference(game:GetService("UserInputService"))
+local TextService = CloneReference(game:GetService("TextService"))
+local Teams = CloneReference(game:GetService("Teams"))
+local TweenService = CloneReference(game:GetService("TweenService"))
 --
 local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local Mouse = CloneReference(LocalPlayer:GetMouse())
@@ -5526,8 +5526,12 @@ else
     })
 end
 
-local X = Library:GetTextBounds(WindowInfo.Title, Library.Scheme.Font, 20, TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12)
-
+local X = Library:GetTextBounds(
+    WindowInfo.Title,
+    Library.Scheme.Font,
+    20,
+    TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12
+)
 WindowTitle = New("TextLabel", {
     BackgroundTransparency = 1,
     Size = UDim2.new(0, X, 1, 0),
@@ -5651,7 +5655,6 @@ local FooterLabel = New("TextLabel", {
                 Parent = SearchBox,
             })
         end
-
         New("ImageLabel", {
             Image = ResizeIcon and ResizeIcon.Url or "",
             ImageColor3 = "FontColor",
@@ -5683,9 +5686,9 @@ local FooterLabel = New("TextLabel", {
         })
 
         Container = New("Frame", {
-	        BackgroundColor3 = function() return Library:GetBetterColor(Library.Scheme.BackgroundColor, 1) end,
+	        BackgroundColor3 = Library.Scheme.BackgroundColor,
 	        Name = "Container",
-	        Position = UDim2.fromOffset(0, 90), 
+	        Position = UDim2.fromOffset(0, 90),
 	        Size = UDim2.new(1, 0, 1, -90),
 	        Parent = MainFrame,
         })
