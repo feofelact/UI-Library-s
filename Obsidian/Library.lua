@@ -18,14 +18,14 @@ local math_clamp, math_abs, math_round, math_floor, math_huge, math_sin, math_co
 local Drawing_new, Rect_new, Font_new, ColorSequence_new, ColorSequenceKeypoint_new, TweenInfo_new, NumberSequence_new, NumberSequenceKeypoint_new = Drawing.new, Rect.new, Font.new, ColorSequence.new, ColorSequenceKeypoint.new, TweenInfo.new, NumberSequence.new, NumberSequenceKeypoint.new;
 local FindFirstChild, FindFirstChildOfClass, GetChildren, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
 --
-local CoreGui = CloneReference(GetService("CoreGui"))
-local Players = CloneReference(GetService("Players"))
-local RunService = CloneReference(GetService("RunService"))
-local SoundService = CloneReference(GetService("SoundService"))
-local UserInputService = CloneReference(GetService("UserInputService"))
-local TextService = CloneReference(GetService("TextService"))
-local Teams = CloneReference(GetService("Teams"))
-local TweenService = CloneReference(GetService("TweenService"))
+local CoreGui = CloneReference(game:GetService("CoreGui"))
+local Players = CloneReference(game:GetService("Players"))
+local RunService = CloneReference(game:GetService("RunService"))
+local SoundService = CloneReference(game:GetService("SoundService"))
+local UserInputService = CloneReference(game:GetService("UserInputService"))
+local TextService = CloneReference(game:GetService("TextService"))
+local Teams = CloneReference(game:GetService("Teams"))
+local TweenService = CloneReference(game:GetService("TweenService"))
 --
 local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local Mouse = CloneReference(LocalPlayer:GetMouse())
