@@ -1,4 +1,4 @@
---local CloneReference = (cloneref or clonereference or function(instance: any) return instance end)
+local CloneReference = (cloneref or clonereference or function(instance: any) return instance end)
 local getgenv = getgenv or function() return Shared end
 local setclipboard = setclipboard or nil
 local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
@@ -16,19 +16,19 @@ local UDim2_new, UDim2_fromScale, UDim2_fromOffset, UDim_new = UDim2.new, UDim2.
 local CFrame_Angles, CFrame_new = CFrame.Angles, CFrame.new;
 local math_clamp, math_abs, math_round, math_floor, math_huge, math_sin, math_cos, math_tan, math_atan2, math_pi, math_min, math_deg, math_rad, math_max, math_random = math.clamp, math.abs, math.round, math.floor, math.huge, math.sin, math.cos, math.tan, math.atan2, math.pi, math.min, math.deg, math.rad, math.max, math.random;
 local Drawing_new, Rect_new, Font_new, ColorSequence_new, ColorSequenceKeypoint_new, TweenInfo_new, NumberSequence_new, NumberSequenceKeypoint_new = Drawing.new, Rect.new, Font.new, ColorSequence.new, ColorSequenceKeypoint.new, TweenInfo.new, NumberSequence.new, NumberSequenceKeypoint.new;
-local FindFirstChild, FindFirstChildOfClass, GetChildren,, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
+local FindFirstChild, FindFirstChildOfClass, GetChildren, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
 --
-local CoreGui = cloneref(game:GetService("CoreGui"))
-local Players = cloneref(game:GetService("Players"))
-local RunService = cloneref(game:GetService("RunService"))
-local SoundService = cloneref(game:GetService("SoundService"))
-local UserInputService = cloneref(game:GetService("UserInputService"))
-local TextService = cloneref(game:GetService("TextService"))
-local Teams = cloneref(game:GetService("Teams"))
-local TweenService = cloneref(game:GetService("TweenService"))
+local CoreGui = CloneReference(game:GetService("CoreGui"))
+local Players = CloneReference(game:GetService("Players"))
+local RunService = CloneReference(game:GetService("RunService"))
+local SoundService = CloneReference(game:GetService("SoundService"))
+local UserInputService = CloneReference(game:GetService("UserInputService"))
+local TextService = CloneReference(game:GetService("TextService"))
+local Teams = CloneReference(game:GetService("Teams"))
+local TweenService = CloneReference(game:GetService("TweenService"))
 --
 local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
-local Mouse = cloneref(LocalPlayer:GetMouse())
+local Mouse = CloneReference(LocalPlayer:GetMouse())
 local MouseLocation = UserInputService:GetMouseLocation()
 --
 local Labels = {}
