@@ -16,7 +16,7 @@ local UDim2_new, UDim2_fromScale, UDim2_fromOffset, UDim_new = UDim2.new, UDim2.
 local CFrame_Angles, CFrame_new = CFrame.Angles, CFrame.new;
 local math_clamp, math_abs, math_round, math_floor, math_huge, math_sin, math_cos, math_tan, math_atan2, math_pi, math_min, math_deg, math_rad, math_max, math_random = math.clamp, math.abs, math.round, math.floor, math.huge, math.sin, math.cos, math.tan, math.atan2, math.pi, math.min, math.deg, math.rad, math.max, math.random;
 local Drawing_new, Rect_new, Font_new, ColorSequence_new, ColorSequenceKeypoint_new, TweenInfo_new, NumberSequence_new, NumberSequenceKeypoint_new = Drawing.new, Rect.new, Font.new, ColorSequence.new, ColorSequenceKeypoint.new, TweenInfo.new, NumberSequence.new, NumberSequenceKeypoint.new;
-local FindFirstChild, FindFirstChildOfClass, GetChildren, GetService, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game.GetService, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
+local FindFirstChild, FindFirstChildOfClass, GetChildren, GetService, GetDescendants, WaitForChild, FindFirstChildWhichIsA, IsA = game.FindFirstChild, game.FindFirstChildOfClass, game.GetChildren, game:GetService, game.GetDescendants, game.WaitForChild, game.FindFirstChildWhichIsA, game.IsA;
 --
 local CoreGui = CloneReference(GetService("CoreGui"))
 local Players = CloneReference(GetService("Players"))
