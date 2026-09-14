@@ -12,7 +12,7 @@ local task_wait, task_spawn, task_delay, task_defer = task.wait, task.spawn, tas
 local coroutine_wrap, coroutine_close, coroutine_create, coroutine_resume = coroutine.wrap, coroutine.close, coroutine.create, coroutine.resume;
 local os_clock, os_date = os.clock, os.date;
 local Vector2_new, Vector3_new, Vector3_one, Vector3_zero = Vector2.new, Vector3.new, Vector3.one, Vector3.zero;
-local UDim2_new, UDim2_fromScale, UDim2_fromOffset, UDim_new = UDim2.new, UDim2.fromScale, UDim2.fromOffset, UDim.new;
+local UDim2_new, UDim2_fromScale, UDim2_fromOffset, UDim_new = UDim2.new, UDim2_fromScale, UDim2_fromOffset, UDim_new;
 local CFrame_Angles, CFrame_new = CFrame.Angles, CFrame.new;
 local math_clamp, math_abs, math_round, math_floor, math_huge, math_sin, math_cos, math_tan, math_atan2, math_pi, math_min, math_deg, math_rad, math_max, math_random = math.clamp, math.abs, math.round, math.floor, math.huge, math.sin, math.cos, math.tan, math.atan2, math.pi, math.min, math.deg, math.rad, math.max, math.random;
 local Drawing_new, Rect_new, Font_new, ColorSequence_new, ColorSequenceKeypoint_new, TweenInfo_new, NumberSequence_new, NumberSequenceKeypoint_new = Drawing.new, Rect.new, Font.new, ColorSequence.new, ColorSequenceKeypoint.new, TweenInfo.new, NumberSequence.new, NumberSequenceKeypoint.new;
@@ -180,13 +180,13 @@ local Templates = {
     Window = {
         Title = "No Title",
         Footer = "No Footer",
-        Position = UDim2.fromOffset(6, 6),
-        Size = UDim2.fromOffset(600, 720),
-        IconSize = UDim2.fromOffset(30, 30),
+        Position = UDim2_fromOffset(6, 6),
+        Size = UDim2_fromOffset(600, 720),
+        IconSize = UDim2_fromOffset(30, 30),
         AutoShow = true,
         Center = true,
         Resizable = true,
-        SearchbarSize = UDim2.fromScale(1, 1),
+        SearchbarSize = UDim2_fromScale(1, 1),
         GlobalSearch = false,
         CornerRadius = 4,
         NotifySide = "Right",
@@ -1000,7 +1000,7 @@ end)
 local ModalElement = New("TextButton", {
     BackgroundTransparency = 1,
     Modal = false,
-    Size = UDim2.fromScale(0, 0),
+    Size = UDim2_fromScale(0, 0),
     AnchorPoint = Vector2.zero,
     Text = "",
     ZIndex = -999,
@@ -1013,7 +1013,7 @@ do
     Cursor = New("Frame", {
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundColor3 = "WhiteColor",
-        Size = UDim2.fromOffset(9, 1),
+        Size = UDim2_fromOffset(9, 1),
         Visible = false,
         ZIndex = 999,
         Parent = ScreenGui,
@@ -1021,7 +1021,7 @@ do
     New("Frame", {
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundColor3 = "DarkColor",
-        Position = UDim2.fromScale(0.5, 0.5),
+        Position = UDim2_fromScale(0.5, 0.5),
         Size = UDim2.new(1, 2, 1, 2),
         ZIndex = 998,
         Parent = Cursor,
@@ -1030,14 +1030,14 @@ do
     local CursorV = New("Frame", {
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundColor3 = "WhiteColor",
-        Position = UDim2.fromScale(0.5, 0.5),
-        Size = UDim2.fromOffset(1, 9),
+        Position = UDim2_fromScale(0.5, 0.5),
+        Size = UDim2_fromOffset(1, 9),
         Parent = Cursor,
     })
     New("Frame", {
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundColor3 = "DarkColor",
-        Position = UDim2.fromScale(0.5, 0.5),
+        Position = UDim2_fromScale(0.5, 0.5),
         Size = UDim2.new(1, 2, 1, 2),
         ZIndex = 998,
         Parent = CursorV,
@@ -1046,8 +1046,8 @@ do
     CursorCustomImage = New("ImageLabel", {
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundTransparency = 1,
-        Position = UDim2.fromScale(0.5, 0.5),
-        Size = UDim2.fromOffset(20, 20),
+        Position = UDim2_fromScale(0.5, 0.5),
+        Size = UDim2_fromOffset(20, 20),
         ZIndex = 1000,
         Visible = false,
         Parent = Cursor
@@ -1074,14 +1074,14 @@ do
 
     NotificationList = New("UIListLayout", {
         HorizontalAlignment = Enum.HorizontalAlignment.Right,
-        Padding = UDim.new(0, 8),
+        Padding = UDim_new(0, 8),
         Parent = NotificationArea,
     })
 end
 
 function Library:ResetCursorIcon()
     CursorCustomImage.Visible = false
-    CursorCustomImage.Size = UDim2.fromOffset(20, 20)
+    CursorCustomImage.Size = UDim2_fromOffset(20, 20)
 end
 
 function Library:ChangeCursorIcon(ImageId: string)
@@ -1282,8 +1282,8 @@ function Library:MakeCover(Holder: GuiObject, Place: string)
     local Cover = New("Frame", {
         AnchorPoint = Vector2.new(Pos[1], Pos[2]),
         BackgroundColor3 = Holder.BackgroundColor3,
-        Position = UDim2.fromScale(Pos[1], Pos[2]),
-        Size = UDim2.fromScale(Size[1], Size[2]),
+        Position = UDim2_fromScale(Pos[1], Pos[2]),
+        Size = UDim2_fromScale(Size[1], Size[2]),
         Parent = Holder,
     })
 
@@ -1322,7 +1322,7 @@ end
 function Library:AddBlank(Frame: GuiObject, Size: UDim2)
     return New("Frame", {
         BackgroundTransparency = 1,
-        Size = Size or UDim2.fromScale(0, 0),
+        Size = Size or UDim2_fromScale(0, 0),
         Parent = Frame,
     })
 end
@@ -1331,7 +1331,7 @@ function Library:MakeOutline(Frame: GuiObject, Corner: number?, ZIndex: number?)
     warn("Obsidian:MakeOutline is deprecated, please use Obsidian:AddOutline instead.")
     local Holder = New("Frame", {
         BackgroundColor3 = "DarkColor",
-        Position = UDim2.fromOffset(-2, -2),
+        Position = UDim2_fromOffset(-2, -2),
         Size = UDim2.new(1, 4, 1, 4),
         ZIndex = ZIndex,
         Parent = Frame,
@@ -1339,7 +1339,7 @@ function Library:MakeOutline(Frame: GuiObject, Corner: number?, ZIndex: number?)
 
     local Outline = New("Frame", {
         BackgroundColor3 = "OutlineColor",
-        Position = UDim2.fromOffset(1, 1),
+        Position = UDim2_fromOffset(1, 1),
         Size = UDim2.new(1, -2, 1, -2),
         ZIndex = ZIndex,
         Parent = Holder,
@@ -1347,11 +1347,11 @@ function Library:MakeOutline(Frame: GuiObject, Corner: number?, ZIndex: number?)
 
     if Corner and Corner > 0 then
         New("UICorner", {
-            CornerRadius = UDim.new(0, Corner + 1),
+            CornerRadius = UDim_new(0, Corner + 1),
             Parent = Holder,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(0, Corner),
+            CornerRadius = UDim_new(0, Corner),
             Parent = Outline,
         })
     end
@@ -1365,22 +1365,22 @@ function Library:AddDraggableLabel(Text: string)
     local Label = New("TextLabel", {
         AutomaticSize = Enum.AutomaticSize.XY,
         BackgroundColor3 = "BackgroundColor",
-        Size = UDim2.fromOffset(0, 0),
-        Position = UDim2.fromOffset(6, 6),
+        Size = UDim2_fromOffset(0, 0),
+        Position = UDim2_fromOffset(6, 6),
         Text = Text,
         TextSize = 15,
         ZIndex = 10,
         Parent = ScreenGui,
     })
     New("UICorner", {
-        CornerRadius = UDim.new(0, Library.CornerRadius),
+        CornerRadius = UDim_new(0, Library.CornerRadius),
         Parent = Label,
     })
     New("UIPadding", {
-        PaddingBottom = UDim.new(0, 6),
-        PaddingLeft = UDim.new(0, 12),
-        PaddingRight = UDim.new(0, 12),
-        PaddingTop = UDim.new(0, 6),
+        PaddingBottom = UDim_new(0, 6),
+        PaddingLeft = UDim_new(0, 12),
+        PaddingRight = UDim_new(0, 12),
+        PaddingTop = UDim_new(0, 6),
         Parent = Label,
     })
     table.insert(
@@ -1411,13 +1411,13 @@ function Library:AddDraggableButton(Text: string, Func, ExcludeScaling: boolean?
 
     local Button = New("TextButton", {
         BackgroundColor3 = "BackgroundColor",
-        Position = UDim2.fromOffset(6, 6),
+        Position = UDim2_fromOffset(6, 6),
         TextSize = 16,
         ZIndex = 10,
         Parent = ScreenGui,
     })
     New("UICorner", {
-        CornerRadius = UDim.new(0, Library.CornerRadius),
+        CornerRadius = UDim_new(0, Library.CornerRadius),
         Parent = Button,
     })
     if not ExcludeScaling then
@@ -1441,7 +1441,7 @@ function Library:AddDraggableButton(Text: string, Func, ExcludeScaling: boolean?
         local X, Y = Library:GetTextBounds(Text, Library.Scheme.Font, 16)
 
         Button.Text = Text
-        Button.Size = UDim2.fromOffset(X * 2, Y * 2)
+        Button.Size = UDim2_fromOffset(X * 2, Y * 2)
     end
     Table:SetText(Text)
 
@@ -1453,13 +1453,13 @@ function Library:AddDraggableMenu(Name: string)
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = "BackgroundColor",
         BackgroundTransparency = 1,
-        Position = UDim2.fromOffset(6, 6),
-        Size = UDim2.fromOffset(235, 0),
+        Position = UDim2_fromOffset(6, 6),
+        Size = UDim2_fromOffset(235, 0),
         ZIndex = 10,
         Parent = ScreenGui,
     })
     New("UICorner", {
-        CornerRadius = UDim.new(0, Library.CornerRadius),
+        CornerRadius = UDim_new(0, Library.CornerRadius),
         Parent = Holder,
     })
     table.insert(
@@ -1475,19 +1475,19 @@ function Library:AddDraggableMenu(Name: string)
         Parent = Holder,
     })
     New("UICorner", {
-        CornerRadius = UDim.new(0, Library.CornerRadius),
+        CornerRadius = UDim_new(0, Library.CornerRadius),
         Parent = Header,
     })
     New("UIPadding", {
-        PaddingLeft = UDim.new(0, 10),
-        PaddingRight = UDim.new(0, 10),
+        PaddingLeft = UDim_new(0, 10),
+        PaddingRight = UDim_new(0, 10),
         Parent = Header,
     })
     New("UIListLayout", {
         FillDirection = Enum.FillDirection.Horizontal,
         HorizontalAlignment = Enum.HorizontalAlignment.Left,
         VerticalAlignment = Enum.VerticalAlignment.Center,
-        Padding = UDim.new(0, 6),
+        Padding = UDim_new(0, 6),
         Parent = Header,
     })
 
@@ -1500,7 +1500,7 @@ function Library:AddDraggableMenu(Name: string)
             ImageColor3 = "AccentColor",
             ImageRectOffset = KeyIconData.ImageRectOffset,
             ImageRectSize = KeyIconData.ImageRectSize,
-            Size = UDim2.fromOffset(14, 14),
+            Size = UDim2_fromOffset(14, 14),
             SizeConstraint = Enum.SizeConstraint.RelativeYY,
             Parent = Header,
         })
@@ -1516,30 +1516,30 @@ function Library:AddDraggableMenu(Name: string)
     })
 
     Library:MakeLine(Holder, {
-        Position = UDim2.fromOffset(0, 28),
+        Position = UDim2_fromOffset(0, 28),
         Size = UDim2.new(1, 0, 0, 1),
     })
 
     local Container = New("Frame", {
         BackgroundColor3 = "MainColor",
         BackgroundTransparency = 0.45,
-        Position = UDim2.fromOffset(0, 29),
+        Position = UDim2_fromOffset(0, 29),
         Size = UDim2.new(1, 0, 1, -29),
         Parent = Holder,
     })
     New("UICorner", {
-        CornerRadius = UDim.new(0, Library.CornerRadius),
+        CornerRadius = UDim_new(0, Library.CornerRadius),
         Parent = Container,
     })
     New("UIPadding", {
-        PaddingBottom = UDim.new(0, 7),
-        PaddingLeft = UDim.new(0, 7),
-        PaddingRight = UDim.new(0, 7),
-        PaddingTop = UDim.new(0, 7),
+        PaddingBottom = UDim_new(0, 7),
+        PaddingLeft = UDim_new(0, 7),
+        PaddingRight = UDim_new(0, 7),
+        PaddingTop = UDim_new(0, 7),
         Parent = Container,
     })
     New("UIListLayout", {
-        Padding = UDim.new(0, 6),
+        Padding = UDim_new(0, 6),
         Parent = Container,
     })
 
@@ -1579,7 +1579,7 @@ function Library:AddContextMenu(
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
             BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-            CanvasSize = UDim2.fromOffset(0, 0),
+            CanvasSize = UDim2_fromOffset(0, 0),
             ScrollBarImageColor3 = "OutlineColor",
             ScrollBarThickness = List == 2 and 2 or 0,
             Size = typeof(Size) == "function" and Size() or Size,
@@ -1633,12 +1633,12 @@ function Library:AddContextMenu(
         Table.Active = true
 
         if typeof(Offset) == "function" then
-            Menu.Position = UDim2.fromOffset(
+            Menu.Position = UDim2_fromOffset(
                 math.floor(Holder.AbsolutePosition.X + Offset()[1]),
                 math.floor(Holder.AbsolutePosition.Y + Offset()[2])
             )
         else
-            Menu.Position = UDim2.fromOffset(
+            Menu.Position = UDim2_fromOffset(
                 math.floor(Holder.AbsolutePosition.X + Offset[1]),
                 math.floor(Holder.AbsolutePosition.Y + Offset[2])
             )
@@ -1652,12 +1652,12 @@ function Library:AddContextMenu(
 
         Table.Signal = Holder:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
             if typeof(Offset) == "function" then
-                Menu.Position = UDim2.fromOffset(
+                Menu.Position = UDim2_fromOffset(
                     math.floor(Holder.AbsolutePosition.X + Offset()[1]),
                     math.floor(Holder.AbsolutePosition.Y + Offset()[2])
                 )
             else
-                Menu.Position = UDim2.fromOffset(
+                Menu.Position = UDim2_fromOffset(
                     math.floor(Holder.AbsolutePosition.X + Offset[1]),
                     math.floor(Holder.AbsolutePosition.Y + Offset[2])
                 )
@@ -1730,10 +1730,10 @@ local TooltipLabel = New("TextLabel", {
     Parent = ScreenGui,
 })
 New("UIPadding", {
-    PaddingBottom = UDim.new(0, 2),
-    PaddingLeft = UDim.new(0, 4),
-    PaddingRight = UDim.new(0, 4),
-    PaddingTop = UDim.new(0, 2),
+    PaddingBottom = UDim_new(0, 2),
+    PaddingLeft = UDim_new(0, 4),
+    PaddingRight = UDim_new(0, 4),
+    PaddingTop = UDim_new(0, 2),
     Parent = TooltipLabel,
 })
 table.insert(
@@ -1754,7 +1754,7 @@ TooltipLabel:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
         (workspace.CurrentCamera.ViewportSize.X - TooltipLabel.AbsolutePosition.X - 8) / Library.DPIScale
     )
 
-    TooltipLabel.Size = UDim2.fromOffset(X + 8)
+    TooltipLabel.Size = UDim2_fromOffset(X + 8)
 end)
 
 local CurrentHoverInstance
@@ -1786,7 +1786,7 @@ function Library:AddTooltip(InfoStr: string, DisabledInfoStr: string, HoverInsta
             and not Library.ActiveDialog
             and not (CurrentMenu and Library:MouseIsOverFrame(CurrentMenu.Menu, Mouse))
         do
-            TooltipLabel.Position = UDim2.fromOffset(
+            TooltipLabel.Position = UDim2_fromOffset(
                 Mouse.X + (Library.ShowCustomCursor and 8 or 14),
                 Mouse.Y + (Library.ShowCustomCursor and 8 or 12)
             )
@@ -2056,7 +2056,7 @@ do
             BackgroundColor3 = "MainColor",
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
-            Size = UDim2.fromOffset(18, 18),
+            Size = UDim2_fromOffset(18, 18),
             Text = KeyPicker.Value,
             TextSize = 14,
             Parent = ToggleLabel,
@@ -2073,13 +2073,13 @@ do
             })
 
             New("UICorner", {
-                CornerRadius = UDim.new(0, Library.CornerRadius / 2),
+                CornerRadius = UDim_new(0, Library.CornerRadius / 2),
                 Parent = Holder,
             })
 
             New("UIPadding", {
-                PaddingLeft = UDim.new(0, 6),
-                PaddingRight = UDim.new(0, 6),
+                PaddingLeft = UDim_new(0, 6),
+                PaddingRight = UDim_new(0, 6),
                 Parent = Holder,
             })
 
@@ -2132,7 +2132,7 @@ do
             table.insert(Library.KeybindToggles, KeybindsToggle)
         end
 
-        local MenuTable = Library:AddContextMenu(Picker, UDim2.fromOffset(62, 0), function()
+        local MenuTable = Library:AddContextMenu(Picker, UDim2_fromOffset(62, 0), function()
             return { Picker.AbsoluteSize.X + 1.5, 0.5 }
         end, 1)
         KeyPicker.Menu = MenuTable
@@ -2194,7 +2194,7 @@ do
                 ToggleLabel.AbsoluteSize.X
             )
             Picker.Text = PickerText or KeyPicker.DisplayValue
-            Picker.Size = UDim2.fromOffset((X + 9), (Y + 4))
+            Picker.Size = UDim2_fromOffset((X + 9), (Y + 4))
         end
 
         function KeyPicker:Update()
@@ -2325,7 +2325,7 @@ do
             Picking = true
 
             Picker.Text = "..."
-            Picker.Size = UDim2.fromOffset(29, 18)
+            Picker.Size = UDim2_fromOffset(29, 18)
 
             local Input
             local ActiveModifiers = {}
@@ -2338,7 +2338,7 @@ do
             repeat
                 task.wait()
                 Picker.Text = "..."
-                Picker.Size = UDim2.fromOffset(29, 18)
+                Picker.Size = UDim2_fromOffset(29, 18)
 
                 if GetInput() then
                     Picking = false
@@ -2515,12 +2515,12 @@ do
             BackgroundColor3 = ColorPicker.Value,
             BorderColor3 = Library:GetDarkerColor(ColorPicker.Value),
             BorderSizePixel = 1,
-            Size = UDim2.fromOffset(18, 18),
+            Size = UDim2_fromOffset(18, 18),
             Text = "",
             Parent = ToggleLabel,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(0, 4),
+            CornerRadius = UDim_new(0, 4),
             Parent = Holder,
         })
 
@@ -2528,27 +2528,27 @@ do
             Image = Library.ImageManager.GetAsset("TransparencyTexture"),
             ImageTransparency = (1 - ColorPicker.Transparency),
             ScaleType = Enum.ScaleType.Tile,
-            Size = UDim2.fromScale(1, 1),
-            TileSize = UDim2.fromOffset(9, 9),
+            Size = UDim2_fromScale(1, 1),
+            TileSize = UDim2_fromOffset(9, 9),
             Parent = Holder,
         })
 
         local ColorMenu = Library:AddContextMenu(
             Holder,
-            UDim2.fromOffset(Info.Transparency and 256 or 234, 0),
+            UDim2_fromOffset(Info.Transparency and 256 or 234, 0),
             function()
                 return { 0.5, Holder.AbsoluteSize.Y + 1.5 }
             end,
             1
         )
-        ColorMenu.List.Padding = UDim.new(0, 8)
+        ColorMenu.List.Padding = UDim_new(0, 8)
         ColorPicker.ColorMenu = ColorMenu
 
         New("UIPadding", {
-            PaddingBottom = UDim.new(0, 6),
-            PaddingLeft = UDim.new(0, 6),
-            PaddingRight = UDim.new(0, 6),
-            PaddingTop = UDim.new(0, 6),
+            PaddingBottom = UDim_new(0, 6),
+            PaddingLeft = UDim_new(0, 6),
+            PaddingRight = UDim_new(0, 6),
+            PaddingTop = UDim_new(0, 6),
             Parent = ColorMenu.Menu,
         })
 
@@ -2570,25 +2570,25 @@ do
         })
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
-            Padding = UDim.new(0, 6),
+            Padding = UDim_new(0, 6),
             Parent = ColorHolder,
         })
 
         local SatVipMap = New("ImageButton", {
             BackgroundColor3 = ColorPicker.Value,
             Image = Library.ImageManager.GetAsset("SaturationMap"),
-            Size = UDim2.fromOffset(200, 200),
+            Size = UDim2_fromOffset(200, 200),
             Parent = ColorHolder,
         })
 
         local SatVibCursor = New("Frame", {
             AnchorPoint = Vector2.new(0.5, 0.5),
             BackgroundColor3 = "WhiteColor",
-            Size = UDim2.fromOffset(6, 6),
+            Size = UDim2_fromOffset(6, 6),
             Parent = SatVipMap,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(1, 0),
+            CornerRadius = UDim_new(1, 0),
             Parent = SatVibCursor,
         })
         New("UIStroke", {
@@ -2597,7 +2597,7 @@ do
         })
 
         local HueSelector = New("TextButton", {
-            Size = UDim2.fromOffset(16, 200),
+            Size = UDim2_fromOffset(16, 200),
             Text = "",
             Parent = ColorHolder,
         })
@@ -2612,7 +2612,7 @@ do
             BackgroundColor3 = "WhiteColor",
             BorderColor3 = "DarkColor",
             BorderSizePixel = 1,
-            Position = UDim2.fromScale(0.5, ColorPicker.Hue),
+            Position = UDim2_fromScale(0.5, ColorPicker.Hue),
             Size = UDim2.new(1, 2, 0, 1),
             Parent = HueSelector,
         })
@@ -2623,14 +2623,14 @@ do
             TransparencySelector = New("ImageButton", {
                 Image = Library.ImageManager.GetAsset("TransparencyTexture"),
                 ScaleType = Enum.ScaleType.Tile,
-                Size = UDim2.fromOffset(16, 200),
-                TileSize = UDim2.fromOffset(8, 8),
+                Size = UDim2_fromOffset(16, 200),
+                TileSize = UDim2_fromOffset(8, 8),
                 Parent = ColorHolder,
             })
 
             TransparencyColor = New("Frame", {
                 BackgroundColor3 = ColorPicker.Value,
-                Size = UDim2.fromScale(1, 1),
+                Size = UDim2_fromScale(1, 1),
                 Parent = TransparencySelector,
             })
             New("UIGradient", {
@@ -2647,7 +2647,7 @@ do
                 BackgroundColor3 = "WhiteColor",
                 BorderColor3 = "DarkColor",
                 BorderSizePixel = 1,
-                Position = UDim2.fromScale(0.5, ColorPicker.Transparency),
+                Position = UDim2_fromScale(0.5, ColorPicker.Transparency),
                 Size = UDim2.new(1, 2, 0, 1),
                 Parent = TransparencySelector,
             })
@@ -2661,7 +2661,7 @@ do
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
             HorizontalFlex = Enum.UIFlexAlignment.Fill,
-            Padding = UDim.new(0, 8),
+            Padding = UDim_new(0, 8),
             Parent = InfoHolder,
         })
 
@@ -2670,7 +2670,7 @@ do
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
             ClearTextOnFocus = false,
-            Size = UDim2.fromScale(1, 1),
+            Size = UDim2_fromScale(1, 1),
             Text = "#??????",
             TextSize = 14,
             Parent = InfoHolder,
@@ -2681,13 +2681,13 @@ do
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
             ClearTextOnFocus = false,
-            Size = UDim2.fromScale(1, 1),
+            Size = UDim2_fromScale(1, 1),
             Text = "?, ?, ?",
             TextSize = 14,
             Parent = InfoHolder,
         })
 
-        local ContextMenu = Library:AddContextMenu(Holder, UDim2.fromOffset(93, 0), function()
+        local ContextMenu = Library:AddContextMenu(Holder, UDim2_fromOffset(93, 0), function()
             return { Holder.AbsoluteSize.X + 1.5, 0.5 }
         end, 1)
         ColorPicker.ContextMenu = ContextMenu
@@ -2750,10 +2750,10 @@ do
                 TransparencyColor.BackgroundColor3 = ColorPicker.Value
             end
 
-            SatVibCursor.Position = UDim2.fromScale(ColorPicker.Sat, 1 - ColorPicker.Vib)
-            HueCursor.Position = UDim2.fromScale(0.5, ColorPicker.Hue)
+            SatVibCursor.Position = UDim2_fromScale(ColorPicker.Sat, 1 - ColorPicker.Vib)
+            HueCursor.Position = UDim2_fromScale(0.5, ColorPicker.Hue)
             if TransparencyCursor then
-                TransparencyCursor.Position = UDim2.fromScale(0.5, ColorPicker.Transparency)
+                TransparencyCursor.Position = UDim2_fromScale(0.5, ColorPicker.Transparency)
             end
 
             HueBox.Text = "#" .. ColorPicker.Value:ToHex()
@@ -2916,7 +2916,7 @@ do
             local TextLabel = New("TextLabel", {
                 AutomaticSize = Enum.AutomaticSize.X,
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(1, 0),
+                Size = UDim2_fromScale(1, 0),
                 Text = Text,
                 TextSize = 14,
                 TextTransparency = 0.5,
@@ -2932,7 +2932,7 @@ do
                 BackgroundColor3 = "MainColor",
                 BorderColor3 = "OutlineColor",
                 BorderSizePixel = 1,
-                Position = UDim2.fromScale(0, 0.5),
+                Position = UDim2_fromScale(0, 0.5),
                 Size = UDim2.new(0.5, -SizeX, 0, 2),
                 Parent = Holder,
             })
@@ -2941,7 +2941,7 @@ do
                 BackgroundColor3 = "MainColor",
                 BorderColor3 = "OutlineColor",
                 BorderSizePixel = 1,
-                Position = UDim2.fromScale(1, 0.5),
+                Position = UDim2_fromScale(1, 0.5),
                 Size = UDim2.new(0.5, -SizeX, 0, 2),
                 Parent = Holder,
             })
@@ -2951,7 +2951,7 @@ do
                 BackgroundColor3 = "MainColor",
                 BorderColor3 = "OutlineColor",
                 BorderSizePixel = 1,
-                Position = UDim2.fromScale(0, 0.5),
+                Position = UDim2_fromScale(0, 0.5),
                 Size = UDim2.new(1, 0, 0, 2),
                 Parent = Holder,
             })
@@ -3053,7 +3053,7 @@ do
             New("UIListLayout", {
                 FillDirection = Enum.FillDirection.Horizontal,
                 HorizontalAlignment = Enum.HorizontalAlignment.Right,
-                Padding = UDim.new(0, 6),
+                Padding = UDim_new(0, 6),
                 Parent = TextLabel,
             })
         end
@@ -3146,7 +3146,7 @@ do
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
             HorizontalFlex = Enum.UIFlexAlignment.Fill,
-            Padding = UDim.new(0, 9),
+            Padding = UDim_new(0, 9),
             Parent = Holder,
         })
 
@@ -3154,7 +3154,7 @@ do
             local Base = New("TextButton", {
                 Active = not Button.Disabled,
                 BackgroundColor3 = Button.Disabled and "BackgroundColor" or "MainColor",
-                Size = UDim2.fromScale(1, 1),
+                Size = UDim2_fromScale(1, 1),
                 Text = Button.Text,
                 TextSize = 14,
                 TextTransparency = 0.4,
@@ -3411,7 +3411,7 @@ do
 
         local Label = New("TextLabel", {
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(26, 0),
+            Position = UDim2_fromOffset(26, 0),
             Size = UDim2.new(1, -26, 1, 0),
             Text = Toggle.Text,
             TextSize = 14,
@@ -3423,18 +3423,18 @@ do
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
             HorizontalAlignment = Enum.HorizontalAlignment.Right,
-            Padding = UDim.new(0, 6),
+            Padding = UDim_new(0, 6),
             Parent = Label,
         })
 
         local Checkbox = New("Frame", {
             BackgroundColor3 = "MainColor",
-            Size = UDim2.fromScale(1, 1),
+            Size = UDim2_fromScale(1, 1),
             SizeConstraint = Enum.SizeConstraint.RelativeYY,
             Parent = Button,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(0, Library.CornerRadius / 2),
+            CornerRadius = UDim_new(0, Library.CornerRadius / 2),
             Parent = Checkbox,
         })
 
@@ -3449,7 +3449,7 @@ do
             ImageRectOffset = CheckIcon and CheckIcon.ImageRectOffset or Vector2.zero,
             ImageRectSize = CheckIcon and CheckIcon.ImageRectSize or Vector2.zero,
             ImageTransparency = 1,
-            Position = UDim2.fromOffset(2, 2),
+            Position = UDim2_fromOffset(2, 2),
             Size = UDim2.new(1, -4, 1, -4),
             Parent = Checkbox,
         })
@@ -3630,19 +3630,19 @@ do
             BackgroundColor3 = "MainColor",
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
-            Position = UDim2.fromScale(0, 1),
+            Position = UDim2_fromScale(0, 1),
             Size = UDim2.new(1, 0, 0, 13),
             Text = "",
             Parent = Holder,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(0, 4),
+            CornerRadius = UDim_new(0, 4),
             Parent = Bar,
         })
 
         local DisplayLabel = New("TextLabel", {
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
+            Size = UDim2_fromScale(1, 1),
             Text = "",
             TextSize = 14,
             ZIndex = 2,
@@ -3657,11 +3657,11 @@ do
 
         local Fill = New("Frame", {
             BackgroundColor3 = "AccentColor",
-            Size = UDim2.fromScale(0.5, 1),
+            Size = UDim2_fromScale(0.5, 1),
             Parent = Bar,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(0, 4),
+            CornerRadius = UDim_new(0, 4),
             Parent = Fill,
         })
 
@@ -3711,7 +3711,7 @@ do
             end
 
             local X = (Slider.Value - Slider.Min) / (Slider.Max - Slider.Min)
-            Fill.Size = UDim2.fromScale(X, 1)
+            Fill.Size = UDim2_fromScale(X, 1)
         end
 
         function Slider:OnChanged(Func)
@@ -3899,7 +3899,7 @@ do
             BackgroundColor3 = "MainColor",
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
-            Position = UDim2.fromScale(0, 1),
+            Position = UDim2_fromScale(0, 1),
             Size = UDim2.new(1, 0, 0, 21),
             Text = "---",
             TextSize = 14,
@@ -3908,8 +3908,8 @@ do
         })
 
         New("UIPadding", {
-            PaddingLeft = UDim.new(0, 8),
-            PaddingRight = UDim.new(0, 4),
+            PaddingLeft = UDim_new(0, 8),
+            PaddingRight = UDim_new(0, 4),
             Parent = Display,
         })
 
@@ -3920,8 +3920,8 @@ do
             ImageRectOffset = ArrowIcon and ArrowIcon.ImageRectOffset or Vector2.zero,
             ImageRectSize = ArrowIcon and ArrowIcon.ImageRectSize or Vector2.zero,
             ImageTransparency = 0.5,
-            Position = UDim2.fromScale(1, 0.5),
-            Size = UDim2.fromOffset(16, 16),
+            Position = UDim2_fromScale(1, 0.5),
+            Size = UDim2_fromOffset(16, 16),
             Parent = Display,
         })
 
@@ -3930,7 +3930,7 @@ do
             SearchBox = New("TextBox", {
                 BackgroundTransparency = 1,
                 PlaceholderText = "Search...",
-                Position = UDim2.fromOffset(-8, 0),
+                Position = UDim2_fromOffset(-8, 0),
                 Size = UDim2.new(1, -12, 1, 0),
                 TextSize = 14,
                 TextXAlignment = Enum.TextXAlignment.Left,
@@ -3938,7 +3938,7 @@ do
                 Parent = Display,
             })
             New("UIPadding", {
-                PaddingLeft = UDim.new(0, 8),
+                PaddingLeft = UDim_new(0, 8),
                 Parent = SearchBox,
             })
         end
@@ -3946,7 +3946,7 @@ do
         local MenuTable = Library:AddContextMenu(
             Display,
             function()
-                return UDim2.fromOffset(Display.AbsoluteSize.X / Library.DPIScale, 0)
+                return UDim2_fromOffset(Display.AbsoluteSize.X / Library.DPIScale, 0)
             end,
             function()
                 return { 0.5, Display.AbsoluteSize.Y + 1.5 }
@@ -3968,7 +3968,7 @@ do
             local Y = math.clamp((Count or GetTableSize(Dropdown.Values)) * 21, 0, Info.MaxVisibleDropdownItems * 21)
 
             MenuTable:SetSize(function()
-                return UDim2.fromOffset(Display.AbsoluteSize.X / Library.DPIScale, Y)
+                return UDim2_fromOffset(Display.AbsoluteSize.X / Library.DPIScale, Y)
             end)
         end
 
@@ -4063,8 +4063,8 @@ do
                     Parent = MenuTable.Menu,
                 })
                 New("UIPadding", {
-                    PaddingLeft = UDim.new(0, 7),
-                    PaddingRight = UDim.new(0, 7),
+                    PaddingLeft = UDim_new(0, 7),
+                    PaddingRight = UDim_new(0, 7),
                     Parent = Button,
                 })
 
@@ -4353,22 +4353,22 @@ do
             BackgroundColor3 = "MainColor",
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
-            Position = UDim2.fromScale(0, 1),
-            Size = UDim2.fromScale(1, 1),
+            Position = UDim2_fromScale(0, 1),
+            Size = UDim2_fromScale(1, 1),
             Parent = Holder,
         })
 
         New("UIPadding", {
-            PaddingBottom = UDim.new(0, 3),
-            PaddingLeft = UDim.new(0, 8),
-            PaddingRight = UDim.new(0, 8),
-            PaddingTop = UDim.new(0, 4),
+            PaddingBottom = UDim_new(0, 3),
+            PaddingLeft = UDim_new(0, 8),
+            PaddingRight = UDim_new(0, 8),
+            PaddingTop = UDim_new(0, 4),
             Parent = Box,
         })
 
         local ViewportFrame = New("ViewportFrame", {
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
+            Size = UDim2_fromScale(1, 1),
             Parent = Box,
             CurrentCamera = Viewport.Camera,
             Active = Viewport.Interactive,
@@ -4591,22 +4591,22 @@ do
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
             BackgroundTransparency = Image.BackgroundTransparency,
-            Position = UDim2.fromScale(0, 1),
-            Size = UDim2.fromScale(1, 1),
+            Position = UDim2_fromScale(0, 1),
+            Size = UDim2_fromScale(1, 1),
             Parent = Holder,
         })
 
         New("UIPadding", {
-            PaddingBottom = UDim.new(0, 3),
-            PaddingLeft = UDim.new(0, 8),
-            PaddingRight = UDim.new(0, 8),
-            PaddingTop = UDim.new(0, 4),
+            PaddingBottom = UDim_new(0, 3),
+            PaddingLeft = UDim_new(0, 8),
+            PaddingRight = UDim_new(0, 8),
+            PaddingTop = UDim_new(0, 4),
             Parent = Box,
         })
 
         local ImageProperties = {
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
+            Size = UDim2_fromScale(1, 1),
             Image = Image.Image,
             ImageTransparency = Image.Transparency,
             ImageColor3 = Image.Color,
@@ -4732,22 +4732,22 @@ do
             BackgroundColor3 = "MainColor",
             BorderColor3 = "OutlineColor",
             BorderSizePixel = 1,
-            Position = UDim2.fromScale(0, 1),
-            Size = UDim2.fromScale(1, 1),
+            Position = UDim2_fromScale(0, 1),
+            Size = UDim2_fromScale(1, 1),
             Parent = Holder,
         })
 
         New("UIPadding", {
-            PaddingBottom = UDim.new(0, 3),
-            PaddingLeft = UDim.new(0, 8),
-            PaddingRight = UDim.new(0, 8),
-            PaddingTop = UDim.new(0, 4),
+            PaddingBottom = UDim_new(0, 3),
+            PaddingLeft = UDim_new(0, 8),
+            PaddingRight = UDim_new(0, 8),
+            PaddingTop = UDim_new(0, 4),
             Parent = Box,
         })
 
         local VideoFrameInstance = New("VideoFrame", {
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
+            Size = UDim2_fromScale(1, 1),
             Video = Video.Video,
             Looped = Video.Looped,
             Volume = Video.Volume,
@@ -4900,13 +4900,13 @@ do
         do
             DepboxContainer = New("Frame", {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(1, 1),
+                Size = UDim2_fromScale(1, 1),
                 Visible = false,
                 Parent = Container,
             })
 
             DepboxList = New("UIListLayout", {
-                Padding = UDim.new(0, 8),
+                Padding = UDim_new(0, 8),
                 Parent = DepboxContainer,
             })
         end
@@ -5006,25 +5006,25 @@ do
         do
             DepGroupboxContainer = New("Frame", {
                 BackgroundColor3 = "BackgroundColor",
-                Size = UDim2.fromScale(1, 0),
+                Size = UDim2_fromScale(1, 0),
                 Visible = false,
                 Parent = BoxHolder,
             })
             New("UICorner", {
-                CornerRadius = UDim.new(0, Library.CornerRadius),
+                CornerRadius = UDim_new(0, Library.CornerRadius),
                 Parent = DepGroupboxContainer,
             })
             Library:AddOutline(DepGroupboxContainer)
 
             DepGroupboxList = New("UIListLayout", {
-                Padding = UDim.new(0, 8),
+                Padding = UDim_new(0, 8),
                 Parent = DepGroupboxContainer,
             })
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 7),
-                PaddingLeft = UDim.new(0, 7),
-                PaddingRight = UDim.new(0, 7),
-                PaddingTop = UDim.new(0, 7),
+                PaddingBottom = UDim_new(0, 7),
+                PaddingLeft = UDim_new(0, 7),
+                PaddingRight = UDim_new(0, 7),
+                PaddingTop = UDim_new(0, 7),
                 Parent = DepGroupboxContainer,
             })
         end
@@ -5120,7 +5120,7 @@ function Library:SetNotifySide(Side: string)
 
     if Side:lower() == "left" then
         NotificationArea.AnchorPoint = Vector2.new(0, 0)
-        NotificationArea.Position = UDim2.fromOffset(6, 6)
+        NotificationArea.Position = UDim2_fromOffset(6, 6)
         NotificationList.HorizontalAlignment = Enum.HorizontalAlignment.Left
     else
         NotificationArea.AnchorPoint = Vector2.new(1, 0)
@@ -5161,7 +5161,7 @@ function Library:Notify(...)
     local FakeBackground = New("Frame", {
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 0),
+        Size = UDim2_fromScale(1, 0),
         Visible = false,
         Parent = NotificationArea,
     })
@@ -5170,23 +5170,23 @@ function Library:Notify(...)
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = "MainColor",
         Position = Library.NotifySide:lower() == "left" and UDim2.new(-1, -8, 0, -2) or UDim2.new(1, 8, 0, -2),
-        Size = UDim2.fromScale(1, 1),
+        Size = UDim2_fromScale(1, 1),
         ZIndex = 5,
         Parent = FakeBackground,
     })
     New("UICorner", {
-        CornerRadius = UDim.new(0, Library.CornerRadius),
+        CornerRadius = UDim_new(0, Library.CornerRadius),
         Parent = Holder,
     })
     New("UIListLayout", {
-        Padding = UDim.new(0, 4),
+        Padding = UDim_new(0, 4),
         Parent = Holder,
     })
     New("UIPadding", {
-        PaddingBottom = UDim.new(0, 8),
-        PaddingLeft = UDim.new(0, 8),
-        PaddingRight = UDim.new(0, 8),
-        PaddingTop = UDim.new(0, 8),
+        PaddingBottom = UDim_new(0, 8),
+        PaddingLeft = UDim_new(0, 8),
+        PaddingRight = UDim_new(0, 8),
+        PaddingTop = UDim_new(0, 8),
         Parent = Holder,
     })
     Library:AddOutline(Holder)
@@ -5202,7 +5202,7 @@ function Library:Notify(...)
         Title = New("TextLabel", {
             AutomaticSize = Enum.AutomaticSize.X,
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(0, 0),
+            Size = UDim2_fromScale(0, 0),
             Text = Data.Title,
             TextSize = 15,
             TextXAlignment = Enum.TextXAlignment.Left,
@@ -5215,7 +5215,7 @@ function Library:Notify(...)
         Desc = New("TextLabel", {
             AutomaticSize = Enum.AutomaticSize.X,
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(0, 0),
+            Size = UDim2_fromScale(0, 0),
             Text = Data.Description,
             TextSize = 14,
             TextXAlignment = Enum.TextXAlignment.Left,
@@ -5228,18 +5228,18 @@ function Library:Notify(...)
         if Title then
             local X, Y =
                 Library:GetTextBounds(Title.Text, Title.FontFace, Title.TextSize, (NotificationArea.AbsoluteSize.X / Library.DPIScale) - 24)
-            Title.Size = UDim2.fromOffset(0, Y)
+            Title.Size = UDim2_fromOffset(0, Y)
             TitleX = X
         end
 
         if Desc then
             local X, Y =
                 Library:GetTextBounds(Desc.Text, Desc.FontFace, Desc.TextSize, (NotificationArea.AbsoluteSize.X / Library.DPIScale) - 24)
-            Desc.Size = UDim2.fromOffset(0, Y)
+            Desc.Size = UDim2_fromOffset(0, Y)
             DescX = X
         end
 
-        FakeBackground.Size = UDim2.fromOffset(math.max(TitleX, DescX) + 24, 0)
+        FakeBackground.Size = UDim2_fromOffset(math.max(TitleX, DescX) + 24, 0)
     end
 
     function Data:ChangeTitle(Text)
@@ -5261,7 +5261,7 @@ function Library:Notify(...)
     function Data:ChangeStep(NewStep)
         if TimerFill and Data.Steps then
             NewStep = math.clamp(NewStep or 0, 0, Data.Steps)
-            TimerFill.Size = UDim2.fromScale(NewStep / Data.Steps, 1)
+            TimerFill.Size = UDim2_fromScale(NewStep / Data.Steps, 1)
         end
     end
 
@@ -5300,18 +5300,18 @@ function Library:Notify(...)
         BackgroundColor3 = "BackgroundColor",
         BorderColor3 = "OutlineColor",
         BorderSizePixel = 1,
-        Position = UDim2.fromOffset(0, 3),
+        Position = UDim2_fromOffset(0, 3),
         Size = UDim2.new(1, 0, 0, 2),
         Parent = TimerHolder,
     })
     TimerFill = New("Frame", {
         BackgroundColor3 = "AccentColor",
-        Size = UDim2.fromScale(1, 1),
+        Size = UDim2_fromScale(1, 1),
         Parent = TimerBar,
     })
 
     if typeof(Data.Time) == "Instance" then
-        TimerFill.Size = UDim2.fromScale(0, 1)
+        TimerFill.Size = UDim2_fromScale(0, 1)
     end
     if Data.SoundId then
         local SoundId = Data.SoundId
@@ -5331,7 +5331,7 @@ function Library:Notify(...)
 
     FakeBackground.Visible = true
     TweenService:Create(Holder, Library.NotifyTweenInfo, {
-        Position = UDim2.fromOffset(0, 0),
+        Position = UDim2_fromOffset(0, 0),
     }):Play()
 
     task.delay(Library.NotifyTweenInfo.Time, function()
@@ -5344,7 +5344,7 @@ function Library:Notify(...)
         else
             TweenService
                 :Create(TimerFill, TweenInfo.new(Data.Time, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {
-                    Size = UDim2.fromScale(0, 1),
+                    Size = UDim2_fromScale(0, 1),
                 })
                 :Play()
             task.wait(Data.Time)
@@ -5375,7 +5375,7 @@ function Library:CreateWindow(WindowInfo)
         Vector2.new(math.min(Library.OriginalMinSize.X, MaxX), math.min(Library.OriginalMinSize.Y, MaxY))
     Library.MinSize = Library.OriginalMinSize
 
-    WindowInfo.Size = UDim2.fromOffset(
+    WindowInfo.Size = UDim2_fromOffset(
         math.clamp(WindowInfo.Size.X.Offset, Library.MinSize.X, MaxX),
         math.clamp(WindowInfo.Size.Y.Offset, Library.MinSize.Y, MaxY)
     )
@@ -5402,7 +5402,7 @@ function Library:CreateWindow(WindowInfo)
     Library.ToggleKeybind = WindowInfo.ToggleKeybind
     Library.GlobalSearch = WindowInfo.GlobalSearch
 
-    local IsDefaultSearchbarSize = WindowInfo.SearchbarSize == UDim2.fromScale(1, 1)
+    local IsDefaultSearchbarSize = WindowInfo.SearchbarSize == UDim2_fromScale(1, 1)
     local MainFrame
     local DividerLine
     local TitleHolder
@@ -5439,7 +5439,7 @@ function Library:CreateWindow(WindowInfo)
             Parent = ScreenGui,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+            CornerRadius = UDim_new(0, WindowInfo.CornerRadius),
             Parent = MainFrame,
         })
         table.insert(
@@ -5452,7 +5452,7 @@ function Library:CreateWindow(WindowInfo)
 
         DividerLine = New("Frame", {
             BackgroundColor3 = "OutlineColor",
-            Position = UDim2.fromOffset(InitialLeftWidth, 0),
+            Position = UDim2_fromOffset(InitialLeftWidth, 0),
             Size = UDim2.new(0, 1, 1, -21),
             Parent = MainFrame,
         })
@@ -5460,8 +5460,8 @@ function Library:CreateWindow(WindowInfo)
         if WindowInfo.BackgroundImage then
             New("ImageLabel", {
                 Image = WindowInfo.BackgroundImage,
-                Position = UDim2.fromScale(0, 0),
-                Size = UDim2.fromScale(1, 1),
+                Position = UDim2_fromScale(0, 0),
+                Size = UDim2_fromScale(1, 1),
                 ScaleType = Enum.ScaleType.Stretch,
                 ZIndex = 999,
                 BackgroundTransparency = 1,
@@ -5490,7 +5490,7 @@ New("UIListLayout", {
     FillDirection = Enum.FillDirection.Vertical,
     HorizontalAlignment = Enum.HorizontalAlignment.Left,
     VerticalAlignment = Enum.VerticalAlignment.Center,
-    Padding = UDim.new(0, 2),
+    Padding = UDim_new(0, 2),
     Parent = TitleHolder,
 })
 
@@ -5503,7 +5503,7 @@ New("UIListLayout", {
     FillDirection = Enum.FillDirection.Horizontal,
     HorizontalAlignment = Enum.HorizontalAlignment.Center,
     VerticalAlignment = Enum.VerticalAlignment.Center,
-    Padding = UDim.new(0, 6),
+    Padding = UDim_new(0, 6),
     Parent = TitleRow,
 })
 
@@ -5557,12 +5557,12 @@ local FooterLabel = New("TextLabel", {
             FillDirection = Enum.FillDirection.Horizontal,
             HorizontalAlignment = Enum.HorizontalAlignment.Left,
             VerticalAlignment = Enum.VerticalAlignment.Center,
-            Padding = UDim.new(0, 8),
+            Padding = UDim_new(0, 8),
             Parent = RightWrapper,
         })
 
         CurrentTabInfo = New("Frame", {
-            Size = UDim2.fromScale(WindowInfo.DisableSearch and 1 or 0.5, 1),
+            Size = UDim2_fromScale(WindowInfo.DisableSearch and 1 or 0.5, 1),
             Visible = false,
             BackgroundTransparency = 1,
             Parent = RightWrapper,
@@ -5581,16 +5581,16 @@ local FooterLabel = New("TextLabel", {
         })
 
         New("UIPadding", {
-            PaddingBottom = UDim.new(0, 8),
-            PaddingLeft = UDim.new(0, 8),
-            PaddingRight = UDim.new(0, 8),
-            PaddingTop = UDim.new(0, 8),
+            PaddingBottom = UDim_new(0, 8),
+            PaddingLeft = UDim_new(0, 8),
+            PaddingRight = UDim_new(0, 8),
+            PaddingTop = UDim_new(0, 8),
             Parent = CurrentTabInfo,
         })
 
         CurrentTabLabel = New("TextLabel", {
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 0),
+            Size = UDim2_fromScale(1, 0),
             AutomaticSize = Enum.AutomaticSize.Y,
             Text = "",
             TextSize = 14,
@@ -5600,7 +5600,7 @@ local FooterLabel = New("TextLabel", {
 
         CurrentTabDescription = New("TextLabel", {
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 0),
+            Size = UDim2_fromScale(1, 0),
             AutomaticSize = Enum.AutomaticSize.Y,
             Text = "",
             TextWrapped = true,
@@ -5623,14 +5623,14 @@ local FooterLabel = New("TextLabel", {
             Parent = SearchBox,
         })
         New("UICorner", {
-            CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+            CornerRadius = UDim_new(0, WindowInfo.CornerRadius),
             Parent = SearchBox,
         })
         New("UIPadding", {
-            PaddingBottom = UDim.new(0, 8),
-            PaddingLeft = UDim.new(0, 8),
-            PaddingRight = UDim.new(0, 8),
-            PaddingTop = UDim.new(0, 8),
+            PaddingBottom = UDim_new(0, 8),
+            PaddingLeft = UDim_new(0, 8),
+            PaddingRight = UDim_new(0, 8),
+            PaddingTop = UDim_new(0, 8),
             Parent = SearchBox,
         })
         New("UIStroke", {
@@ -5639,6 +5639,7 @@ local FooterLabel = New("TextLabel", {
         })
 
         local SearchIcon = Library:GetIcon("search")
+
         if SearchIcon then
             New("ImageLabel", {
                 Image = SearchIcon.Url,
@@ -5646,7 +5647,7 @@ local FooterLabel = New("TextLabel", {
                 ImageRectOffset = SearchIcon.ImageRectOffset,
                 ImageRectSize = SearchIcon.ImageRectSize,
                 ImageTransparency = 0.5,
-                Size = UDim2.fromScale(1, 1),
+                Size = UDim2_fromScale(1, 1),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 Parent = SearchBox,
             })
@@ -5658,7 +5659,7 @@ local FooterLabel = New("TextLabel", {
             ImageRectOffset = ResizeIcon and ResizeIcon.ImageRectOffset or Vector2.zero,
             ImageRectSize = ResizeIcon and ResizeIcon.ImageRectSize or Vector2.zero,
             ImageTransparency = 0.5,
-            Position = UDim2.fromOffset(2, 2),
+            Position = UDim2_fromOffset(2, 2),
             Size = UDim2.new(1, -4, 1, -4),
             Parent = ResizeButton,
         })
@@ -5667,8 +5668,8 @@ local FooterLabel = New("TextLabel", {
 	        AutomaticCanvasSize = Enum.AutomaticSize.None,
 	        BackgroundColor3 = "BackgroundColor",
 	        BackgroundTransparency = 1,
-	        CanvasSize = UDim2.fromScale(0, 0),
-	        Position = UDim2.fromOffset(0, 49),
+	        CanvasSize = UDim2_fromScale(0, 0),
+	        Position = UDim2_fromOffset(0, 48),
 	        ScrollBarThickness = 0,
 	        ScrollingDirection = Enum.ScrollingDirection.X,
 	        Size = UDim2.new(1, 0, 0, 40),
@@ -5683,18 +5684,18 @@ local FooterLabel = New("TextLabel", {
         })
 
         Container = New("Frame", {
-	        BackgroundColor3 = function() return Library:GetBetterColor(Library.Scheme.BackgroundColor, 1) end,
+	        BackgroundColor3 = Library.Scheme.BackgroundColor,
 	        Name = "Container",
-	        Position = UDim2.fromOffset(0, 90),
+	        Position = UDim2_fromOffset(0, 90),
 	        Size = UDim2.new(1, 0, 1, -90),
 	        Parent = MainFrame,
         })
 
         New("UIPadding", {
-            PaddingBottom = UDim.new(0, 0),
-            PaddingLeft = UDim.new(0, 6),
-            PaddingRight = UDim.new(0, 6),
-            PaddingTop = UDim.new(0, 0),
+            PaddingBottom = UDim_new(0, 0),
+            PaddingLeft = UDim_new(0, 6),
+            PaddingRight = UDim_new(0, 6),
+            PaddingTop = UDim_new(0, 0),
             Parent = Container,
         })
     end
@@ -5731,10 +5732,10 @@ local FooterLabel = New("TextLabel", {
             end
 
             Button.Label.Visible = not IsCompact
-            Button.Padding.PaddingBottom = UDim.new(0, IsCompact and 6 or 11)
-            Button.Padding.PaddingLeft = UDim.new(0, IsCompact and 6 or 12)
-            Button.Padding.PaddingRight = UDim.new(0, IsCompact and 6 or 12)
-            Button.Padding.PaddingTop = UDim.new(0, IsCompact and 6 or 11)
+            Button.Padding.PaddingBottom = UDim_new(0, IsCompact and 6 or 11)
+            Button.Padding.PaddingLeft = UDim_new(0, IsCompact and 6 or 12)
+            Button.Padding.PaddingRight = UDim_new(0, IsCompact and 6 or 12)
+            Button.Padding.PaddingTop = UDim_new(0, IsCompact and 6 or 11)
             Button.Icon.SizeConstraint = IsCompact and Enum.SizeConstraint.RelativeXY or Enum.SizeConstraint.RelativeYY
         end
     end
@@ -5764,14 +5765,14 @@ local FooterLabel = New("TextLabel", {
         CurrentTabDescription.Text = Description
 
         if IsDefaultSearchbarSize then
-            SearchBox.Size = UDim2.fromScale(0.5, 1)
+            SearchBox.Size = UDim2_fromScale(0.5, 1)
         end
         CurrentTabInfo.Visible = true
     end
     function Window:HideTabInfo()
         CurrentTabInfo.Visible = false
         if IsDefaultSearchbarSize then
-            SearchBox.Size = UDim2.fromScale(1, 1)
+            SearchBox.Size = UDim2_fromScale(1, 1)
         end
     end
 
@@ -5804,15 +5805,15 @@ local FooterLabel = New("TextLabel", {
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.fromOffset(80, 60),
+                Size = UDim2_fromOffset(80, 60),
                 Text = "",
                 Parent = Tabs,
             })
             local ButtonPadding = New("UIPadding", {
-                PaddingBottom = UDim.new(0, 4),
-                PaddingLeft = UDim.new(0, 4),
-                PaddingRight = UDim.new(0, 4),
-                PaddingTop = UDim.new(0, 4),
+                PaddingBottom = UDim_new(0, 4),
+                PaddingLeft = UDim_new(0, 4),
+                PaddingRight = UDim_new(0, 4),
+                PaddingTop = UDim_new(0, 4),
                 Parent = TabButton,
             })
 
@@ -5853,7 +5854,7 @@ local FooterLabel = New("TextLabel", {
 
             TabContainer = New("Frame", {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(1, 1),
+                Size = UDim2_fromScale(1, 1),
                 Visible = false,
                 Parent = Container,
             })
@@ -5861,21 +5862,21 @@ local FooterLabel = New("TextLabel", {
             TabLeft = New("ScrollingFrame", {
                 AutomaticCanvasSize = Enum.AutomaticSize.Y,
                 BackgroundTransparency = 1,
-                CanvasSize = UDim2.fromScale(0, 0),
+                CanvasSize = UDim2_fromScale(0, 0),
                 ScrollBarImageTransparency = 1,
                 ScrollBarThickness = 0,
                 Size = UDim2.new(0.5, -3, 1, 0),
                 Parent = TabContainer,
             })
             New("UIListLayout", {
-                Padding = UDim.new(0, 2),
+                Padding = UDim_new(0, 2),
                 Parent = TabLeft,
             })
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 2),
-                PaddingLeft = UDim.new(0, 2),
-                PaddingRight = UDim.new(0, 2),
-                PaddingTop = UDim.new(0, 2),
+                PaddingBottom = UDim_new(0, 2),
+                PaddingLeft = UDim_new(0, 2),
+                PaddingRight = UDim_new(0, 2),
+                PaddingTop = UDim_new(0, 2),
                 Parent = TabLeft,
             })
             do
@@ -5895,22 +5896,22 @@ local FooterLabel = New("TextLabel", {
                 AnchorPoint = Vector2.new(1, 0),
                 AutomaticCanvasSize = Enum.AutomaticSize.Y,
                 BackgroundTransparency = 1,
-                CanvasSize = UDim2.fromScale(0, 0),
-                Position = UDim2.fromScale(1, 0),
+                CanvasSize = UDim2_fromScale(0, 0),
+                Position = UDim2_fromScale(1, 0),
                 ScrollBarImageTransparency = 1,
                 ScrollBarThickness = 0,
                 Size = UDim2.new(0.5, -3, 1, 0),
                 Parent = TabContainer,
             })
             New("UIListLayout", {
-                Padding = UDim.new(0, 2),
+                Padding = UDim_new(0, 2),
                 Parent = TabRight,
             })
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 2),
-                PaddingLeft = UDim.new(0, 2),
-                PaddingRight = UDim.new(0, 2),
-                PaddingTop = UDim.new(0, 2),
+                PaddingBottom = UDim_new(0, 2),
+                PaddingLeft = UDim_new(0, 2),
+                PaddingRight = UDim_new(0, 2),
+                PaddingTop = UDim_new(0, 2),
                 Parent = TabRight,
             })
             do
@@ -5930,8 +5931,8 @@ local FooterLabel = New("TextLabel", {
         local WarningBoxHolder = New("Frame", {
             AutomaticSize = Enum.AutomaticSize.Y,
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(0, 7),
-            Size = UDim2.fromScale(1, 0),
+            Position = UDim2_fromOffset(0, 7),
+            Size = UDim2_fromScale(1, 0),
             Visible = false,
             Parent = TabContainer,
         })
@@ -5946,12 +5947,12 @@ local FooterLabel = New("TextLabel", {
         do
             WarningBox = New("Frame", {
                 BackgroundColor3 = "BackgroundColor",
-                Position = UDim2.fromOffset(2, 0),
+                Position = UDim2_fromOffset(2, 0),
                 Size = UDim2.new(1, -5, 0, 0),
                 Parent = WarningBoxHolder,
             })
             New("UICorner", {
-                CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+                CornerRadius = UDim_new(0, WindowInfo.CornerRadius),
                 Parent = WarningBox,
             })
             WarningBoxOutline, WarningBoxShadowOutline = Library:AddOutline(WarningBox)
@@ -5959,17 +5960,17 @@ local FooterLabel = New("TextLabel", {
             WarningBoxScrollingFrame = New("ScrollingFrame", {
                 BackgroundTransparency = 1,
                 BorderSizePixel = 0,
-                Size = UDim2.fromScale(1, 1),
+                Size = UDim2_fromScale(1, 1),
                 CanvasSize = UDim2.new(0, 0, 0, 0),
                 ScrollBarThickness = 3,
                 ScrollingDirection = Enum.ScrollingDirection.Y,
                 Parent = WarningBox,
             })
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 4),
-                PaddingLeft = UDim.new(0, 6),
-                PaddingRight = UDim.new(0, 6),
-                PaddingTop = UDim.new(0, 4),
+                PaddingBottom = UDim_new(0, 4),
+                PaddingLeft = UDim_new(0, 6),
+                PaddingRight = UDim_new(0, 6),
+                PaddingTop = UDim_new(0, 4),
                 Parent = WarningBoxScrollingFrame,
             })
 
@@ -5992,7 +5993,7 @@ local FooterLabel = New("TextLabel", {
 
             WarningText = New("TextLabel", {
                 BackgroundTransparency = 1,
-                Position = UDim2.fromOffset(0, 16),
+                Position = UDim2_fromOffset(0, 16),
                 Size = UDim2.new(1, -4, 0, 0),
                 Text = "",
                 TextSize = 14,
@@ -6119,10 +6120,10 @@ local FooterLabel = New("TextLabel", {
 
                 local YBox = 24 + YText
                 if Tab.WarningBox.LockSize == true and YBox >= MaximumSize then
-                    WarningBoxScrollingFrame.CanvasSize = UDim2.fromOffset(0, YBox)
+                    WarningBoxScrollingFrame.CanvasSize = UDim2_fromOffset(0, YBox)
                     YBox = MaximumSize
                 else
-                    WarningBoxScrollingFrame.CanvasSize = UDim2.fromOffset(0, 0)
+                    WarningBoxScrollingFrame.CanvasSize = UDim2_fromOffset(0, 0)
                 end
 
                 WarningText.Size = UDim2.new(1, -4, 0, YText)
@@ -6136,16 +6137,16 @@ local FooterLabel = New("TextLabel", {
             local BoxHolder = New("Frame", {
                 AutomaticSize = Enum.AutomaticSize.Y,
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(1, 0),
+                Size = UDim2_fromScale(1, 0),
                 Parent = Info.Side == 1 and TabLeft or TabRight,
             })
             New("UIListLayout", {
-                Padding = UDim.new(0, 6),
+                Padding = UDim_new(0, 6),
                 Parent = BoxHolder,
             })
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 4),
-                PaddingTop = UDim.new(0, 4),
+                PaddingBottom = UDim_new(0, 4),
+                PaddingTop = UDim_new(0, 4),
                 Parent = BoxHolder,
             })
 
@@ -6157,17 +6158,17 @@ local FooterLabel = New("TextLabel", {
             do
                 GroupboxHolder = New("Frame", {
                     BackgroundColor3 = "BackgroundColor",
-                    Size = UDim2.fromScale(1, 0),
+                    Size = UDim2_fromScale(1, 0),
                     Parent = BoxHolder,
                 })
                 New("UICorner", {
-                    CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+                    CornerRadius = UDim_new(0, WindowInfo.CornerRadius),
                     Parent = GroupboxHolder,
                 })
                 Library:AddOutline(GroupboxHolder)
 
                 Library:MakeLine(GroupboxHolder, {
-                    Position = UDim2.fromOffset(0, 34),
+                    Position = UDim2_fromOffset(0, 34),
                     Size = UDim2.new(1, 0, 0, 1),
                 })
 
@@ -6178,15 +6179,15 @@ local FooterLabel = New("TextLabel", {
                         ImageColor3 = BoxIcon.Custom and "WhiteColor" or "AccentColor",
                         ImageRectOffset = BoxIcon.ImageRectOffset,
                         ImageRectSize = BoxIcon.ImageRectSize,
-                        Position = UDim2.fromOffset(6, 6),
-                        Size = UDim2.fromOffset(22, 22),
+                        Position = UDim2_fromOffset(6, 6),
+                        Size = UDim2_fromOffset(22, 22),
                         Parent = GroupboxHolder,
                     })
                 end
 
                 GroupboxLabel = New("TextLabel", {
                     BackgroundTransparency = 1,
-                    Position = UDim2.fromOffset(BoxIcon and 24 or 0, 0),
+                    Position = UDim2_fromOffset(BoxIcon and 24 or 0, 0),
                     Size = UDim2.new(1, 0, 0, 34),
                     Text = Info.Name,
                     TextSize = 15,
@@ -6194,27 +6195,27 @@ local FooterLabel = New("TextLabel", {
                     Parent = GroupboxHolder,
                 })
                 New("UIPadding", {
-                    PaddingLeft = UDim.new(0, 12),
-                    PaddingRight = UDim.new(0, 12),
+                    PaddingLeft = UDim_new(0, 12),
+                    PaddingRight = UDim_new(0, 12),
                     Parent = GroupboxLabel,
                 })
 
                 GroupboxContainer = New("Frame", {
                     BackgroundTransparency = 1,
-                    Position = UDim2.fromOffset(0, 35),
+                    Position = UDim2_fromOffset(0, 35),
                     Size = UDim2.new(1, 0, 1, -35),
                     Parent = GroupboxHolder,
                 })
 
                 GroupboxList = New("UIListLayout", {
-                    Padding = UDim.new(0, 8),
+                    Padding = UDim_new(0, 8),
                     Parent = GroupboxContainer,
                 })
                 New("UIPadding", {
-                    PaddingBottom = UDim.new(0, 7),
-                    PaddingLeft = UDim.new(0, 7),
-                    PaddingRight = UDim.new(0, 7),
-                    PaddingTop = UDim.new(0, 7),
+                    PaddingBottom = UDim_new(0, 7),
+                    PaddingLeft = UDim_new(0, 7),
+                    PaddingRight = UDim_new(0, 7),
+                    PaddingTop = UDim_new(0, 7),
                     Parent = GroupboxContainer,
                 })
             end
@@ -6253,16 +6254,16 @@ local FooterLabel = New("TextLabel", {
             local BoxHolder = New("Frame", {
                 AutomaticSize = Enum.AutomaticSize.Y,
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(1, 0),
+                Size = UDim2_fromScale(1, 0),
                 Parent = Info.Side == 1 and TabLeft or TabRight,
             })
             New("UIListLayout", {
-                Padding = UDim.new(0, 6),
+                Padding = UDim_new(0, 6),
                 Parent = BoxHolder,
             })
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 4),
-                PaddingTop = UDim.new(0, 4),
+                PaddingBottom = UDim_new(0, 4),
+                PaddingTop = UDim_new(0, 4),
                 Parent = BoxHolder,
             })
 
@@ -6272,11 +6273,11 @@ local FooterLabel = New("TextLabel", {
             do
                 TabboxHolder = New("Frame", {
                     BackgroundColor3 = "BackgroundColor",
-                    Size = UDim2.fromScale(1, 0),
+                    Size = UDim2_fromScale(1, 0),
                     Parent = BoxHolder,
                 })
                 New("UICorner", {
-                    CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+                    CornerRadius = UDim_new(0, WindowInfo.CornerRadius),
                     Parent = TabboxHolder,
                 })
                 Library:AddOutline(TabboxHolder)
@@ -6305,7 +6306,7 @@ local FooterLabel = New("TextLabel", {
                 local Button = New("TextButton", {
                     BackgroundColor3 = "MainColor",
                     BackgroundTransparency = 0,
-                    Size = UDim2.fromOffset(0, 34),
+                    Size = UDim2_fromOffset(0, 34),
                     Text = Name,
                     TextSize = 15,
                     TextTransparency = 0.5,
@@ -6320,20 +6321,20 @@ local FooterLabel = New("TextLabel", {
 
                 local Container = New("Frame", {
                     BackgroundTransparency = 1,
-                    Position = UDim2.fromOffset(0, 35),
+                    Position = UDim2_fromOffset(0, 35),
                     Size = UDim2.new(1, 0, 1, -35),
                     Visible = false,
                     Parent = TabboxHolder,
                 })
                 local List = New("UIListLayout", {
-                    Padding = UDim.new(0, 8),
+                    Padding = UDim_new(0, 8),
                     Parent = Container,
                 })
                 New("UIPadding", {
-                    PaddingBottom = UDim.new(0, 7),
-                    PaddingLeft = UDim.new(0, 7),
-                    PaddingRight = UDim.new(0, 7),
-                    PaddingTop = UDim.new(0, 7),
+                    PaddingBottom = UDim_new(0, 7),
+                    PaddingLeft = UDim_new(0, 7),
+                    PaddingRight = UDim_new(0, 7),
+                    PaddingTop = UDim_new(0, 7),
                     Parent = Container,
                 })
 
@@ -6524,20 +6525,20 @@ local FooterLabel = New("TextLabel", {
                 Parent = Tabs,
             })
             New("UICorner", {
-                CornerRadius = UDim.new(0, Library.CornerRadius),
+                CornerRadius = UDim_new(0, Library.CornerRadius),
                 Parent = TabButton,
             })
             local ButtonPadding = New("UIPadding", {
-                PaddingBottom = UDim.new(0, IsCompact and 6 or 11),
-                PaddingLeft = UDim.new(0, IsCompact and 6 or 12),
-                PaddingRight = UDim.new(0, IsCompact and 6 or 12),
-                PaddingTop = UDim.new(0, IsCompact and 6 or 11),
+                PaddingBottom = UDim_new(0, IsCompact and 6 or 11),
+                PaddingLeft = UDim_new(0, IsCompact and 6 or 12),
+                PaddingRight = UDim_new(0, IsCompact and 6 or 12),
+                PaddingTop = UDim_new(0, IsCompact and 6 or 11),
                 Parent = TabButton,
             })
 
             TabLabel = New("TextLabel", {
                 BackgroundTransparency = 1,
-                Position = UDim2.fromOffset(30, 0),
+                Position = UDim2_fromOffset(30, 0),
                 Size = UDim2.new(1, -30, 1, 0),
                 Text = Name,
                 TextSize = 16,
@@ -6554,7 +6555,7 @@ local FooterLabel = New("TextLabel", {
                     ImageRectOffset = Icon.ImageRectOffset,
                     ImageRectSize = Icon.ImageRectSize,
                     ImageTransparency = 0.5,
-                    Size = UDim2.fromScale(1, 1),
+                    Size = UDim2_fromScale(1, 1),
                     SizeConstraint = IsCompact and Enum.SizeConstraint.RelativeXY or Enum.SizeConstraint.RelativeYY,
                     Parent = TabButton,
                 })
@@ -6569,21 +6570,21 @@ local FooterLabel = New("TextLabel", {
             TabContainer = New("ScrollingFrame", {
                 AutomaticCanvasSize = Enum.AutomaticSize.Y,
                 BackgroundTransparency = 1,
-                CanvasSize = UDim2.fromScale(0, 0),
+                CanvasSize = UDim2_fromScale(0, 0),
                 ScrollBarThickness = 0,
-                Size = UDim2.fromScale(1, 1),
+                Size = UDim2_fromScale(1, 1),
                 Visible = false,
                 Parent = Container,
             })
             New("UIListLayout", {
                 HorizontalAlignment = Enum.HorizontalAlignment.Center,
-                Padding = UDim.new(0, 8),
+                Padding = UDim_new(0, 8),
                 VerticalAlignment = Enum.VerticalAlignment.Center,
                 Parent = TabContainer,
             })
             New("UIPadding", {
-                PaddingLeft = UDim.new(0, 1),
-                PaddingRight = UDim.new(0, 1),
+                PaddingLeft = UDim_new(0, 1),
+                PaddingRight = UDim_new(0, 1),
                 Parent = TabContainer,
             })
         end
@@ -6613,8 +6614,8 @@ local FooterLabel = New("TextLabel", {
                 Parent = Holder,
             })
             New("UIPadding", {
-                PaddingLeft = UDim.new(0, 8),
-                PaddingRight = UDim.new(0, 8),
+                PaddingLeft = UDim_new(0, 8),
+                PaddingRight = UDim_new(0, 8),
                 Parent = Box,
             })
 
@@ -6623,7 +6624,7 @@ local FooterLabel = New("TextLabel", {
                 BackgroundColor3 = "MainColor",
                 BorderColor3 = "OutlineColor",
                 BorderSizePixel = 1,
-                Position = UDim2.fromScale(1, 0),
+                Position = UDim2_fromScale(1, 0),
                 Size = UDim2.new(0, 63, 1, 0),
                 Text = "Execute",
                 TextSize = 14,
@@ -6752,7 +6753,7 @@ local FooterLabel = New("TextLabel", {
             RunService:BindToRenderStep("ShowCursor", Enum.RenderPriority.Last.Value, function()
                 UserInputService.MouseIconEnabled = not Library.ShowCustomCursor
 
-                Cursor.Position = UDim2.fromOffset(Mouse.X, Mouse.Y)
+                Cursor.Position = UDim2_fromOffset(Mouse.X, Mouse.Y)
                 Cursor.Visible = Library.ShowCustomCursor
 
                 if not (Library.Toggled and ScreenGui and ScreenGui.Parent) then
@@ -6784,7 +6785,7 @@ local FooterLabel = New("TextLabel", {
         local SidebarGrabber = New("TextButton", {
             AnchorPoint = Vector2.new(0.5, 0),
             BackgroundTransparency = 1,
-            Position = UDim2.fromScale(0.5, 0),
+            Position = UDim2_fromScale(0.5, 0),
             Size = UDim2.new(0, 8, 1, 0),
             Text = "",
             Parent = DividerLine,
@@ -6884,7 +6885,7 @@ local FooterLabel = New("TextLabel", {
             LockButton.Button.Position = UDim2.new(1, -6, 0, 46)
             LockButton.Button.AnchorPoint = Vector2.new(1, 0)
         else
-            LockButton.Button.Position = UDim2.fromOffset(6, 46)
+            LockButton.Button.Position = UDim2_fromOffset(6, 46)
         end
     end
 
