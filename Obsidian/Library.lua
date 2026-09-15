@@ -3197,6 +3197,7 @@ do
             SizeConstraint = Enum.SizeConstraint.RelativeYY,
             Parent = Button,
         })
+
         New("UICorner", {
             CornerRadius = UDim.new(0, Library.CornerRadius / 2),
             Parent = Checkbox,
@@ -3215,8 +3216,9 @@ do
             Visible = false,
             Parent = Checkbox,
         })
+
         New("UICorner", {
-            CornerRadius = UDim.new(0, math.max(Library.CornerRadius / 2 - 1, 0)),
+            CornerRadius = UDim.new(0, Library.CornerRadius / 2),
             Parent = CheckboxAccent,
         })
 
