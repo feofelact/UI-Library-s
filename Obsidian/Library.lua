@@ -3,7 +3,7 @@ local getgenv = getgenv or function() return Shared end
 local setclipboard = setclipboard or nil
 local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
 local GetHui = gethui or function() return CoreGui end
--- 
+--
 local Instance_new = Instance.new;
 local Color3_fromRGB, Color3_new, Color3_fromHSV, Color3_fromHex = Color3.fromRGB, Color3.new, Color3.fromHSV, Color3.fromHex;
 local table_clear, table_insert, table_remove, table_unpack, table_find, table_sort, table_concat = table.clear, table.insert, table_remove, table_unpack, table_find, table_sort, table_concat;
@@ -94,10 +94,10 @@ local Library = {
 
     IsLightTheme = false,
     Scheme = {
-        BackgroundColor = Color3.fromRGB(15, 15, 15),
-        MainColor = Color3.fromRGB(25, 25, 25),
-        AccentColor = Color3.fromRGB(125, 85, 255),
-        OutlineColor = Color3.fromRGB(40, 40, 40),
+        BackgroundColor = Color3.fromRGB(13, 13, 13),
+        MainColor = Color3.fromRGB(13, 13, 13),
+        AccentColor = Color3.fromRGB(216, 126, 157),
+        OutlineColor = Color3.fromRGB(35, 35, 35),
         FontColor = Color3.new(1, 1, 1),
         Font = Font.fromEnum(Enum.Font.Code),
 
@@ -5532,6 +5532,7 @@ local X = Library:GetTextBounds(
     20,
     TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12
 )
+
 WindowTitle = New("TextLabel", {
     BackgroundTransparency = 1,
     Size = UDim2.new(0, X, 1, 0),
