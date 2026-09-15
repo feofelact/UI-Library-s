@@ -3942,11 +3942,6 @@ do
             Parent = Display,
         })
 
-        New("UICorner", {
-            CornerRadius = UDim.new(0, Library.CornerRadius / 2),
-            Parent = Display,
-        })
-
         local ArrowImage = New("ImageLabel", {
             AnchorPoint = Vector2.new(1, 0.5),
             Image = ArrowIcon and ArrowIcon.Url or "",
@@ -4071,15 +4066,9 @@ do
                     TextXAlignment = Enum.TextXAlignment.Left,
                     Parent = MenuTable.Menu,
                 })
-                
                 New("UIPadding", {
                     PaddingLeft = UDim.new(0, 7),
                     PaddingRight = UDim.new(0, 7),
-                    Parent = Button,
-                })
-
-                New("UICorner", {
-                    CornerRadius = UDim.new(0, Library.CornerRadius / 2),
                     Parent = Button,
                 })
 
@@ -5548,8 +5537,8 @@ local FooterLabel = New("TextLabel", {
         RightWrapper = New("Frame", {
             AnchorPoint = Vector2.new(1, 0.5),
             BackgroundTransparency = 1,
-            Position = UDim2.new(1, -49, 0.5, 0),
-            Size = UDim2.new(1, -InitialLeftWidth - 57 - 1, 1, -16),
+            Position = UDim2.new(1, -12, 0.5, 0),
+            Size = UDim2.new(1, -InitialLeftWidth - 20, 1, -16),
             Parent = TopBar,
         })
 
@@ -5561,15 +5550,36 @@ local FooterLabel = New("TextLabel", {
             Parent = RightWrapper,
         })
 
-        CurrentTabInfo = New("Frame", {
+        Tabs = New("ScrollingFrame", {
+            AutomaticCanvasSize = Enum.AutomaticSize.X,
+            BackgroundTransparency = 1,
+            CanvasSize = UDim2.fromScale(0, 0),
+            ScrollBarThickness = 0,
+            ScrollingDirection = Enum.ScrollingDirection.X,
             Size = UDim2.fromScale(1, 1),
+            Parent = RightWrapper,
+        })
+        New("UIFlexItem", {
+            FlexMode = Enum.UIFlexMode.Grow,
+            Parent = Tabs,
+        })
+        New("UIListLayout", {
+            FillDirection = Enum.FillDirection.Horizontal,
+            HorizontalAlignment = Enum.HorizontalAlignment.Left,
+            VerticalAlignment = Enum.VerticalAlignment.Center,
+            Padding = UDim.new(0, 4),
+            Parent = Tabs,
+        })
+
+        CurrentTabInfo = New("Frame", {
+            Size = UDim2.fromScale(0.4, 1),
             Visible = false,
             BackgroundTransparency = 1,
             Parent = RightWrapper,
         })
 
         New("UIFlexItem", {
-            FlexMode = Enum.UIFlexMode.Grow,
+            FlexMode = Enum.UIFlexMode.Shrink,
             Parent = CurrentTabInfo,
         })
 
@@ -5610,42 +5620,17 @@ local FooterLabel = New("TextLabel", {
             Parent = CurrentTabInfo,
         })
 
-        New("ImageLabel", {
-            Image = ResizeIcon and ResizeIcon.Url or "",
-            ImageColor3 = "FontColor",
-            ImageRectOffset = ResizeIcon and ResizeIcon.ImageRectOffset or Vector2.zero,
-            ImageRectSize = ResizeIcon and ResizeIcon.ImageRectSize or Vector2.zero,
-            ImageTransparency = 0.5,
-            Position = UDim2.fromOffset(2, 2),
-            Size = UDim2.new(1, -4, 1, -4),
-            Parent = ResizeButton,
-        })
-
-        Tabs = New("ScrollingFrame", {
-	        AutomaticCanvasSize = Enum.AutomaticSize.None,
-	        BackgroundColor3 = "BackgroundColor",
-	        BackgroundTransparency = 1,
-	        CanvasSize = UDim2.fromScale(0, 0),
-	        Position = UDim2.fromOffset(0, 48),
-	        ScrollBarThickness = 0,
-	        ScrollingDirection = Enum.ScrollingDirection.X,
-	        Size = UDim2.new(1, 0, 0, 40),
-	        Parent = MainFrame,
-        })
-
-        New("UIListLayout", {
-            FillDirection = Enum.FillDirection.Horizontal,
-            HorizontalAlignment = Enum.HorizontalAlignment.Center,
-            VerticalAlignment = Enum.VerticalAlignment.Center,
-            Parent = Tabs,
+        Library:MakeLine(MainFrame, {
+            Position = UDim2.new(0, 0, 0, 48),
+            Size = UDim2.new(1, 0, 0, 1),
         })
 
         Container = New("Frame", {
-	        BackgroundColor3 = Library.Scheme.BackgroundColor,
-	        Name = "Container",
-	        Position = UDim2.fromOffset(0, 89),
-	        Size = UDim2.new(1, 0, 1, -90),
-	        Parent = MainFrame,
+            BackgroundColor3 = Library.Scheme.BackgroundColor,
+            Name = "Container",
+            Position = UDim2.fromOffset(0, 49),
+            Size = UDim2.new(1, 0, 1, -49),
+            Parent = MainFrame,
         })
 
         New("UIPadding", {
