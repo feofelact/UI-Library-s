@@ -1645,10 +1645,11 @@ function Library:SetIconModule(module: IconModule)
 end
 
 local BaseAddons = {}
-do
-    local Funcs = {}
 
-    function Funcs:AddKeyPicker(Idx, Info)
+do
+    local Functions = {}
+
+    function Functions:AddKeyPicker(Idx, Info)
         Info = Library:Validate(Info, Templates.KeyPicker)
 
         local ParentObj = self
@@ -2255,7 +2256,7 @@ do
     for Hue = 0, 1, 0.1 do
         table.insert(HueSequenceTable, ColorSequenceKeypoint.new(Hue, Color3.fromHSV(Hue, 1, 1)))
     end
-    function Funcs:AddColorPicker(Idx, Info)
+    function Functions:AddColorPicker(Idx, Info)
         Info = Library:Validate(Info, Templates.ColorPicker)
 
         local ParentObj = self
@@ -2654,18 +2655,18 @@ do
         return self
     end
 
-    BaseAddons.__index = Funcs
+    BaseAddons.__index = Functions
     BaseAddons.__namecall = function(_, Key, ...)
-        return Funcs[Key](...)
+        return Functions[Key](...)
     end
 end
 
 local BaseGroupbox = {}
 
 do
-    local Funcs = {}
+    local Functions = {}
 
-    function Funcs:AddDivider(Text)
+    function Functions:AddDivider(Text)
         local Groupbox = self
         local Container = Groupbox.Container
 
@@ -2728,7 +2729,7 @@ do
         })
     end
 
-    function Funcs:AddLabel(...)
+    function Functions:AddLabel(...)
         local Data = {}
         local Addons = {}
 
@@ -2841,7 +2842,7 @@ do
         return Label
     end
 
-    function Funcs:AddButton(...)
+    function Functions:AddButton(...)
         local function GetInfo(...)
             local Info = {}
 
@@ -3138,7 +3139,7 @@ do
         return Button
     end
 
-    function Funcs:AddCheckbox(Idx, Info)
+    function Functions:AddCheckbox(Idx, Info)
         Info = Library:Validate(Info, Templates.Toggle)
 
         local Groupbox = self
@@ -3230,10 +3231,15 @@ do
 
             if Toggle.Disabled then
                 Label.TextTransparency = 0.8
-                CheckImage.ImageTransparency = Toggle.Value and 0.8 or 1
+                CheckImage.ImageTransparency = 1
 
-                Checkbox.BackgroundColor3 = Library.Scheme.BackgroundColor
-                Library.Registry[Checkbox].BackgroundColor3 = "BackgroundColor"
+                if Toggle.Value then
+                    Checkbox.BackgroundColor3 = Library.Scheme.AccentColor
+                    Library.Registry[Checkbox].BackgroundColor3 = "AccentColor"
+                else
+                    Checkbox.BackgroundColor3 = Library.Scheme.BackgroundColor
+                    Library.Registry[Checkbox].BackgroundColor3 = "BackgroundColor"
+                end
 
                 return
             end
@@ -3241,12 +3247,14 @@ do
             TweenService:Create(Label, Library.TweenInfo, {
                 TextTransparency = Toggle.Value and 0 or 0.4,
             }):Play()
-            TweenService:Create(CheckImage, Library.TweenInfo, {
-                ImageTransparency = Toggle.Value and 0 or 1,
+
+            CheckImage.ImageTransparency = 1
+
+            TweenService:Create(Checkbox, Library.TweenInfo, {
+                BackgroundColor3 = Toggle.Value and Library.Scheme.AccentColor or Library.Scheme.MainColor,
             }):Play()
 
-            Checkbox.BackgroundColor3 = Library.Scheme.MainColor
-            Library.Registry[Checkbox].BackgroundColor3 = "MainColor"
+            Library.Registry[Checkbox].BackgroundColor3 = Toggle.Value and "AccentColor" or "MainColor"
         end
 
         function Toggle:OnChanged(Func)
@@ -3337,7 +3345,264 @@ do
         return Toggle
     end
 
-    function Funcs:AddSlider(Idx, Info)
+    function Functions:AddInput(Idx, Info)
+        if self.Destroyed then return nil end
+
+        if typeof(Info) == "table" and (typeof(Info.VerifyValue) == "function" and Info.Finished ~= true) then
+            Info.Finished = true
+        end
+
+        Info = Library:Validate(Info, Templates.Input)
+
+        local Groupbox = self
+        local Container = Groupbox.Container
+
+        local Input = {
+            Connections = {},
+            Destroyed = false,
+
+            Text = Info.Text,
+            Value = Info.Default,
+
+            Finished = Info.Finished,
+            Numeric = Info.Numeric,
+            ClearTextOnFocus = Info.ClearTextOnFocus,
+            ClearTextOnBlur = Info.ClearTextOnBlur,
+            Placeholder = Info.Placeholder,
+            AllowEmpty = Info.AllowEmpty,
+            EmptyReset = Info.EmptyReset,
+
+            Tooltip = Info.Tooltip,
+            DisabledTooltip = Info.DisabledTooltip,
+            TooltipTable = nil,
+
+            Callback = Info.Callback,
+            Changed = Info.Changed,
+            VerifyValue = Info.VerifyValue,
+
+            Disabled = Info.Disabled,
+            Visible = Info.Visible,
+
+            Type = "Input",
+        }
+
+        local Holder = New("Frame", {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 0, 39),
+            Visible = Input.Visible,
+            Parent = Container,
+        })
+
+        local Label = New("TextLabel", {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 0, 14),
+            Text = Input.Text,
+            TextSize = 14,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            Parent = Holder,
+        })
+
+        local Box = New("TextBox", {
+            AnchorPoint = Vector2.new(0, 1),
+            BackgroundColor3 = "MainColor",
+            ClearTextOnFocus = not Input.Disabled and Input.ClearTextOnFocus,
+            PlaceholderText = Input.Placeholder,
+            Position = UDim2.fromScale(0, 1),
+            Size = UDim2.new(1, 0, 0, 21),
+            Text = Input.Value,
+            TextEditable = not Input.Disabled,
+            TextScaled = true,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            Parent = Holder,
+        })
+
+        New("UIPadding", {
+            PaddingBottom = UDim.new(0, 3),
+            PaddingLeft = UDim.new(0, 8),
+            PaddingRight = UDim.new(0, 8),
+            PaddingTop = UDim.new(0, 4),
+            Parent = Box,
+        })
+
+        local BoxStroke = New("UIStroke", {
+            Color = "OutlineColor",
+            Parent = Box,
+        })
+
+        table.insert(
+            Library.Corners,
+            New("UICorner", {
+                CornerRadius = UDim.new(0, Library.CornerRadius / 2),
+                Parent = Box,
+            })
+        )
+
+        function Input:UpdateColors()
+            if Library.Unloaded then
+                return
+            end
+
+            Label.TextTransparency = Input.Disabled and 0.8 or 0
+            Box.TextTransparency = Input.Disabled and 0.8 or 0
+            BoxStroke.Transparency = Input.Disabled and 0.5 or 0
+
+            Box.BackgroundColor3 = Input.Disabled and Library.Scheme.BackgroundColor or Library.Scheme.MainColor
+            Library.Registry[Box].BackgroundColor3 = Input.Disabled and "BackgroundColor" or "MainColor"
+        end
+
+        function Input:OnChanged(Func)
+            Input.Changed = Func
+        end
+
+        function Input:RunChanged()
+            if Input.Disabled then
+                return
+            end
+
+            Library:SafeCallback(Input.Callback, Input.Value)
+            Library:SafeCallback(Input.Changed, Input.Value)
+        end
+
+        function Input:SetValue(Text)
+            if not Input.AllowEmpty and Trim(Text) == "" then
+                Text = Input.EmptyReset
+            end
+
+            if Info.MaxLength and #Text > Info.MaxLength then
+                Text = Text:sub(1, Info.MaxLength)
+            end
+
+            if Input.Numeric then
+                if #tostring(Text) > 0 and not tonumber(Text) then
+                    Text = Input.Value
+                end
+            end
+
+            if typeof(Info.VerifyValue) == "function" and (Text ~= Input.EmptyReset and Info.VerifyValue(Text) ~= true) then
+                Text = Input.EmptyReset
+            end
+
+            Input.Value = Text
+            Box.Text = Text
+
+            Input:RunChanged()
+        end
+
+        function Input:SetDisabled(Disabled: boolean)
+            Input.Disabled = Disabled
+
+            if Input.TooltipTable then
+                Input.TooltipTable.Disabled = Input.Disabled
+            end
+
+            Box.ClearTextOnFocus = not Input.Disabled and Input.ClearTextOnFocus
+            Box.TextEditable = not Input.Disabled
+            Input:UpdateColors()
+        end
+
+        function Input:SetVisible(Visible: boolean)
+            Input.Visible = Visible
+
+            Holder.Visible = Input.Visible
+            Groupbox:Resize()
+        end
+
+        function Input:SetText(Text: string)
+            Input.Text = Text
+            Label.Text = Text
+        end
+
+        if Input.Finished then
+            table.insert(Input.Connections, Box.FocusLost:Connect(function(Enter)
+                if not Enter then
+                    if Input.ClearTextOnBlur then
+                        Box.Text = Input.Value
+                    end
+
+                    return
+                end
+
+                Input:SetValue(Box.Text)
+            end))
+        else
+            table.insert(Input.Connections, Box:GetPropertyChangedSignal("Text"):Connect(function()
+                if Box.Text == Input.Value then return end
+
+                Input:SetValue(Box.Text)
+            end))
+        end
+
+        table.insert(Input.Connections, Box.Focused:Connect(function()
+            if Input.Disabled then
+                return
+            end
+
+            Library.Registry[BoxStroke].Color = "AccentColor"
+            TweenService:Create(BoxStroke, Library.TweenInfo, {
+                Color = Library.Scheme.AccentColor,
+            }):Play()
+        end))
+
+        table.insert(Input.Connections, Box.FocusLost:Connect(function()
+            if Input.Disabled then
+                return
+            end
+
+            Library.Registry[BoxStroke].Color = "OutlineColor"
+            TweenService:Create(BoxStroke, Library.TweenInfo, {
+                Color = Library.Scheme.OutlineColor,
+            }):Play()
+        end))
+
+        if typeof(Input.Tooltip) == "string" or typeof(Input.DisabledTooltip) == "string" then
+            Input.TooltipTable = Library:AddTooltip(Input.Tooltip, Input.DisabledTooltip, Box)
+            Input.TooltipTable.Disabled = Input.Disabled
+        end
+
+        Groupbox:Resize()
+
+        Input.Holder = Holder
+        table.insert(Groupbox.Elements, Input)
+
+        Input.Default = Input.Value
+        if typeof(Info.VerifyValue) == "function" and (Input.Default ~= Input.EmptyReset and Info.VerifyValue(Input.Default) ~= true) then
+            Input:SetValue(Input.EmptyReset)
+            Input.Default = Input.EmptyReset
+        end
+
+        Input:UpdateColors()
+        Options[Idx] = Input
+
+        function Input:Destroy()
+            Input.Destroyed = true
+
+            if Input.Connections then
+                for _, Connection in Input.Connections do
+                    Connection:Disconnect()
+                end
+            end
+
+            if Input.TooltipTable then
+                Input.TooltipTable:Destroy()
+            end
+
+            if Holder then
+                Holder:Destroy()
+            end
+
+            local ElemIdx = table.find(Groupbox.Elements, Input)
+            if ElemIdx then
+                table.remove(Groupbox.Elements, ElemIdx)
+            end
+
+            Groupbox:Resize()
+            Options[Idx] = nil
+        end
+
+        return Input
+    end
+
+    function Functions:AddSlider(Idx, Info)
         Info = Library:Validate(Info, Templates.Slider)
 
         local Groupbox = self
@@ -3602,7 +3867,7 @@ do
         return Slider
     end
 
-    function Funcs:AddDropdown(Idx, Info)
+    function Functions:AddDropdown(Idx, Info)
         Info = Library:Validate(Info, Templates.Dropdown)
 
         local Groupbox = self
@@ -4018,7 +4283,7 @@ do
         return Dropdown
     end
 
-    function Funcs:AddViewport(Idx, Info)
+    function Functions:AddViewport(Idx, Info)
         Info = Library:Validate(Info, Templates.Viewport)
 
         local Groupbox = self
@@ -4292,7 +4557,7 @@ do
         return Viewport
     end
 
-    function Funcs:AddImage(Idx, Info)
+    function Functions:AddImage(Idx, Info)
         Info = Library:Validate(Info, Templates.Image)
 
         local Groupbox = self
@@ -4437,7 +4702,7 @@ do
         return Image
     end
 
-    function Funcs:AddVideo(Idx, Info)
+    function Functions:AddVideo(Idx, Info)
         Info = Library:Validate(Info, Templates.Video)
 
         local Groupbox = self
@@ -4554,7 +4819,7 @@ do
         return Video
     end
 
-    function Funcs:AddUIPassthrough(Idx, Info)
+    function Functions:AddUIPassthrough(Idx, Info)
         Info = Library:Validate(Info, Templates.UIPassthrough)
 
         local Groupbox = self
@@ -4624,7 +4889,7 @@ do
         return Passthrough
     end
 
-    function Funcs:AddDependencyBox()
+    function Functions:AddDependencyBox()
         local Groupbox = self
         local Container = Groupbox.Container
 
@@ -4722,7 +4987,7 @@ do
         return Depbox
     end
 
-    function Funcs:AddDependencyGroupbox()
+    function Functions:AddDependencyGroupbox()
         local Groupbox = self
         local Tab = Groupbox.Tab
         local BoxHolder = Groupbox.BoxHolder
@@ -4821,9 +5086,9 @@ do
         return DepGroupbox
     end
 
-    BaseGroupbox.__index = Funcs
+    BaseGroupbox.__index = Functions
     BaseGroupbox.__namecall = function(_, Key, ...)
-        return Funcs[Key](...)
+        return Functions[Key](...)
     end
 end
 
