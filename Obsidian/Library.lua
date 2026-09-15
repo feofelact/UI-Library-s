@@ -5744,6 +5744,7 @@ local FooterLabel = New("TextLabel", {
                 Text = "",
                 Parent = Tabs,
             })
+            
             local ButtonPadding = New("UIPadding", {
                 PaddingBottom = UDim.new(0, 4),
                 PaddingLeft = UDim.new(0, 4),
