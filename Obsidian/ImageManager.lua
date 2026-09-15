@@ -9,14 +9,14 @@ local ImageManagerAssets = {
     TransparencyTexture = {
         RobloxId = 139785960036434,
         Path = "UI-Library-s/Obsidian/Assets/TransparencyTexture.png",
-        URL = Repository .. "Assets/TransparencyTexture.png",
+        URL = Repository .. "Obsidian/Assets/TransparencyTexture.png",
         Id = nil,
     },
 
     SaturationMap = {
         RobloxId = 4155801252,
         Path = "UI-Library-s/Obsidian/Assets/SaturationMap.png",
-        URL = Repository .. "Assets/SaturationMap.png",
+        URL = Repository .. "Obsidian/Assets/SaturationMap.png",
         Id = nil,
     },
 }
