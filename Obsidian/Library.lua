@@ -45,11 +45,6 @@ local Library = {
 
     ScreenGui = nil,
 
-    SearchText = "",
-    Searching = false,
-    GlobalSearch = false,
-    LastSearchTab = nil,
-
     ActiveTab = nil,
     Tabs = {},
     TabButtons = {},
@@ -186,8 +181,6 @@ local Templates = {
         AutoShow = true,
         Center = true,
         Resizable = true,
-        SearchbarSize = UDim2.fromScale(1, 1),
-        GlobalSearch = false,
         CornerRadius = 4,
         NotifySide = "Right",
         ShowCustomCursor = true,
@@ -457,13 +450,9 @@ function Library:UpdateDependencyBoxes()
     for _, Depbox in Library.DependencyBoxes do
         Depbox:Update(true)
     end
-
-    if Library.Searching then
-        Library:UpdateSearch(Library.SearchText)
-    end
 end
 
-local function CheckDepbox(Box, Search)
+local function CheckDepbox(Box)
     local VisibleElements = 0
 
     for _, ElementInfo in Box.Elements do
@@ -473,29 +462,12 @@ local function CheckDepbox(Box, Search)
         elseif ElementInfo.SubButton then
             local Visible = false
 
-            if ElementInfo.Text:lower():match(Search) and ElementInfo.Visible then
-                Visible = true
-            else
-                ElementInfo.Base.Visible = false
-            end
-            if ElementInfo.SubButton.Text:lower():match(Search) and ElementInfo.SubButton.Visible then
-                Visible = true
-            else
-                ElementInfo.SubButton.Base.Visible = false
-            end
             ElementInfo.Holder.Visible = Visible
             if Visible then
                 VisibleElements += 1
             end
 
             continue
-        end
-
-        if ElementInfo.Text and ElementInfo.Text:lower():match(Search) and ElementInfo.Visible then
-            ElementInfo.Holder.Visible = true
-            VisibleElements += 1
-        else
-            ElementInfo.Holder.Visible = false
         end
     end
 
@@ -504,7 +476,7 @@ local function CheckDepbox(Box, Search)
             continue
         end
 
-        VisibleElements += CheckDepbox(Depbox, Search)
+        VisibleElements += CheckDepbox(Depbox)
     end
 
     Box.Holder.Visible = VisibleElements > 0
@@ -532,131 +504,6 @@ local function RestoreDepbox(Box)
     end
 end
 
-local function ApplySearchToTab(Tab, Search)
-    if not Tab then
-        return
-    end
-
-    local HasVisible = false
-    for _, Groupbox in Tab.Groupboxes do
-        local VisibleElements = 0
-
-        for _, ElementInfo in Groupbox.Elements do
-            if ElementInfo.Type == "Divider" then
-                ElementInfo.Holder.Visible = false
-                continue
-            elseif ElementInfo.SubButton then
-                local Visible = false
-
-                if ElementInfo.Text:lower():match(Search) and ElementInfo.Visible then
-                    Visible = true
-                else
-                    ElementInfo.Base.Visible = false
-                end
-                if ElementInfo.SubButton.Text:lower():match(Search) and ElementInfo.SubButton.Visible then
-                    Visible = true
-                else
-                    ElementInfo.SubButton.Base.Visible = false
-                end
-                ElementInfo.Holder.Visible = Visible
-                if Visible then
-                    VisibleElements += 1
-                end
-
-                continue
-        end
-
-            if ElementInfo.Text and ElementInfo.Text:lower():match(Search) and ElementInfo.Visible then
-                ElementInfo.Holder.Visible = true
-                VisibleElements += 1
-            else
-                ElementInfo.Holder.Visible = false
-            end
-        end
-
-        for _, Depbox in Groupbox.DependencyBoxes do
-            if not Depbox.Visible then
-                continue
-            end
-
-            VisibleElements += CheckDepbox(Depbox, Search)
-        end
-
-        if VisibleElements > 0 then
-            Groupbox:Resize()
-            HasVisible = true
-        end
-        Groupbox.BoxHolder.Visible = VisibleElements > 0
-    end
-
-    for _, Tabbox in Tab.Tabboxes do
-        local VisibleTabs = 0
-        local VisibleElements = {}
-
-        for _, SubTab in Tabbox.Tabs do
-            VisibleElements[SubTab] = 0
-
-            for _, ElementInfo in SubTab.Elements do
-                if ElementInfo.Type == "Divider" then
-                    ElementInfo.Holder.Visible = false
-                    continue
-                elseif ElementInfo.SubButton then
-                    local Visible = false
-
-                    if ElementInfo.Text:lower():match(Search) and ElementInfo.Visible then
-                        Visible = true
-                    else
-                        ElementInfo.Base.Visible = false
-                    end
-                    if ElementInfo.SubButton.Text:lower():match(Search) and ElementInfo.SubButton.Visible then
-                        Visible = true
-                    else
-                        ElementInfo.SubButton.Base.Visible = false
-                    end
-                    ElementInfo.Holder.Visible = Visible
-                    if Visible then
-                        VisibleElements[SubTab] += 1
-                    end
-
-                    continue
-                end
-
-                if ElementInfo.Text and ElementInfo.Text:lower():match(Search) and ElementInfo.Visible then
-                    ElementInfo.Holder.Visible = true
-                    VisibleElements[SubTab] += 1
-                else
-                    ElementInfo.Holder.Visible = false
-                end
-            end
-
-            for _, Depbox in SubTab.DependencyBoxes do
-                if not Depbox.Visible then
-                    continue
-                end
-
-                VisibleElements[SubTab] += CheckDepbox(Depbox, Search)
-            end
-        end
-
-        for SubTab, Visible in VisibleElements do
-            SubTab.ButtonHolder.Visible = Visible > 0
-            if Visible > 0 then
-                VisibleTabs += 1
-                HasVisible = true
-
-                if Tabbox.ActiveTab == SubTab then
-                    SubTab:Resize()
-                elseif Tabbox.ActiveTab and VisibleElements[Tabbox.ActiveTab] == 0 then
-                    SubTab:Show()
-                end
-            end
-        end
-
-        Tabbox.BoxHolder.Visible = VisibleTabs > 0
-    end
-
-    return HasVisible
-end
 local function ResetTab(Tab)
     if not Tab then
         return
@@ -710,90 +557,6 @@ local function ResetTab(Tab)
             Tabbox.ActiveTab:Resize()
         end
         Tabbox.BoxHolder.Visible = true
-    end
-end
-
-function Library:UpdateSearch(SearchText)
-    Library.SearchText = SearchText
-
-    local TabsToReset = {}
-
-    if Library.GlobalSearch then
-        for _, Tab in Library.Tabs do
-            if typeof(Tab) == "table" and not Tab.IsKeyTab then
-                table.insert(TabsToReset, Tab)
-            end
-        end
-    elseif Library.LastSearchTab and typeof(Library.LastSearchTab) == "table" then
-        table.insert(TabsToReset, Library.LastSearchTab)
-    end
-
-    for _, Tab in ipairs(TabsToReset) do
-        ResetTab(Tab)
-    end
-
-    local Search = SearchText:lower()
-    if Trim(Search) == "" then
-        Library.Searching = false
-        Library.LastSearchTab = nil
-        return
-    end
-    if not Library.GlobalSearch and Library.ActiveTab and Library.ActiveTab.IsKeyTab then
-        Library.Searching = false
-        Library.LastSearchTab = nil
-        return
-    end
-
-    Library.Searching = true
-
-    local TabsToSearch = {}
-
-    if Library.GlobalSearch then
-        TabsToSearch = TabsToReset
-        if #TabsToSearch == 0 then
-            for _, Tab in Library.Tabs do
-                if typeof(Tab) == "table" and not Tab.IsKeyTab then
-                    table.insert(TabsToSearch, Tab)
-                end
-            end
-        end
-    elseif Library.ActiveTab then
-        table.insert(TabsToSearch, Library.ActiveTab)
-    end
-
-    local FirstVisibleTab = nil
-    local ActiveHasVisible = false
-
-    for _, Tab in ipairs(TabsToSearch) do
-        local HasVisible = ApplySearchToTab(Tab, Search)
-        if HasVisible then
-            if not FirstVisibleTab then
-                FirstVisibleTab = Tab
-            end
-            if Tab == Library.ActiveTab then
-                ActiveHasVisible = true
-            end
-        end
-    end
-
-    if Library.GlobalSearch then
-        if ActiveHasVisible and Library.ActiveTab then
-            Library.ActiveTab:RefreshSides()
-        elseif FirstVisibleTab then
-            local SearchMarker = SearchText
-            task.defer(function()
-                if Library.SearchText ~= SearchMarker then
-                    return
-                end
-
-                if Library.ActiveTab ~= FirstVisibleTab then
-                    FirstVisibleTab:Show()
-                end
-            end)
-        end
-        Library.LastSearchTab = nil
-    else
-        Library.LastSearchTab = Library.ActiveTab
     end
 end
 
@@ -3925,24 +3688,6 @@ do
             Parent = Display,
         })
 
-        local SearchBox
-        if Info.Searchable then
-            SearchBox = New("TextBox", {
-                BackgroundTransparency = 1,
-                PlaceholderText = "Search...",
-                Position = UDim2.fromOffset(-8, 0),
-                Size = UDim2.new(1, -12, 1, 0),
-                TextSize = 14,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Visible = false,
-                Parent = Display,
-            })
-            New("UIPadding", {
-                PaddingLeft = UDim.new(0, 8),
-                Parent = SearchBox,
-            })
-        end
-
         local MenuTable = Library:AddContextMenu(
             Display,
             function()
@@ -3953,13 +3698,9 @@ do
             end,
             2,
             function(Active: boolean)
-                Display.TextTransparency = (Active and SearchBox) and 1 or 0
+                Display.TextTransparency = Active and 1 or 0
                 ArrowImage.ImageTransparency = Active and 0 or 0.5
                 ArrowImage.Rotation = Active and 180 or 0
-                if SearchBox then
-                    SearchBox.Text = ""
-                    SearchBox.Visible = Active
-                end
             end
         )
         Dropdown.Menu = MenuTable
@@ -4043,9 +3784,6 @@ do
 
             local Count = 0
             for _, Value in Values do
-                if SearchBox and not tostring(Value):lower():match(SearchBox.Text:lower()) then
-                    continue
-                end
 
                 Count += 1
                 local IsDisabled = table.find(DisabledValues, Value)
@@ -4226,10 +3964,6 @@ do
 
             MenuTable:Toggle()
         end)
-
-        if SearchBox then
-            SearchBox:GetPropertyChangedSignal("Text"):Connect(Dropdown.BuildDropdownList)
-        end
 
         local Defaults = {}
         if typeof(Info.Default) == "string" then
@@ -4927,7 +4661,7 @@ do
             Groupbox:Resize()
         end
 
-        function Depbox:Update(CancelSearch)
+        function Depbox:Update()
             for _, Dependency in Depbox.Dependencies do
                 local Element = Dependency[1]
                 local Value = Dependency[2]
@@ -4955,13 +4689,6 @@ do
 
             Depbox.Visible = true
             DepboxContainer.Visible = true
-            if not Library.Searching then
-                task.defer(function()
-                    Depbox:Resize()
-                end)
-            elseif not CancelSearch then
-                Library:UpdateSearch(Library.SearchText)
-            end
         end
 
         DepboxList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
@@ -5046,7 +4773,7 @@ do
             DepGroupboxContainer.Size = UDim2.new(1, 0, 0, (DepGroupboxList.AbsoluteContentSize.Y / Library.DPIScale) + 18)
         end
 
-        function DepGroupbox:Update(CancelSearch)
+        function DepGroupbox:Update()
             for _, Dependency in DepGroupbox.Dependencies do
                 local Element = Dependency[1]
                 local Value = Dependency[2]
@@ -5073,12 +4800,6 @@ do
             end
 
             DepGroupbox.Visible = true
-            if not Library.Searching then
-                DepGroupboxContainer.Visible = true
-                DepGroupbox:Resize()
-            elseif not CancelSearch then
-                Library:UpdateSearch(Library.SearchText)
-            end
         end
 
         function DepGroupbox:SetupDependencies(Dependencies)
@@ -5400,16 +5121,13 @@ function Library:CreateWindow(WindowInfo)
     Library.ShowCustomCursor = WindowInfo.ShowCustomCursor
     Library.Scheme.Font = WindowInfo.Font
     Library.ToggleKeybind = WindowInfo.ToggleKeybind
-    Library.GlobalSearch = WindowInfo.GlobalSearch
 
-    local IsDefaultSearchbarSize = WindowInfo.SearchbarSize == UDim2.fromScale(1, 1)
     local MainFrame
     local DividerLine
     local TitleHolder
     local WindowTitle
     local WindowIcon
     local RightWrapper
-    local SearchBox
     local CurrentTabInfo
     local CurrentTabLabel
     local CurrentTabDescription
@@ -5567,7 +5285,7 @@ local FooterLabel = New("TextLabel", {
         })
 
         CurrentTabInfo = New("Frame", {
-            Size = UDim2.fromScale(WindowInfo.DisableSearch and 1 or 0.5, 1),
+            Size = UDim2.fromScale(1, 1),
             Visible = false,
             BackgroundTransparency = 1,
             Parent = RightWrapper,
@@ -5614,48 +5332,6 @@ local FooterLabel = New("TextLabel", {
             TextTransparency = 0.5,
             Parent = CurrentTabInfo,
         })
-
-        SearchBox = New("TextBox", {
-            BackgroundColor3 = "MainColor",
-            PlaceholderText = "Search",
-            Size = WindowInfo.SearchbarSize,
-            TextScaled = true,
-            Visible = not (WindowInfo.DisableSearch or false),
-            Parent = RightWrapper,
-        })
-        New("UIFlexItem", {
-            FlexMode = Enum.UIFlexMode.Shrink,
-            Parent = SearchBox,
-        })
-        New("UICorner", {
-            CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
-            Parent = SearchBox,
-        })
-        New("UIPadding", {
-            PaddingBottom = UDim.new(0, 8),
-            PaddingLeft = UDim.new(0, 8),
-            PaddingRight = UDim.new(0, 8),
-            PaddingTop = UDim.new(0, 8),
-            Parent = SearchBox,
-        })
-        New("UIStroke", {
-            Color = "OutlineColor",
-            Parent = SearchBox,
-        })
-
-        local SearchIcon = Library:GetIcon("search")
-        if SearchIcon then
-            New("ImageLabel", {
-                Image = SearchIcon.Url,
-                ImageColor3 = "FontColor",
-                ImageRectOffset = SearchIcon.ImageRectOffset,
-                ImageRectSize = SearchIcon.ImageRectSize,
-                ImageTransparency = 0.5,
-                Size = UDim2.fromScale(1, 1),
-                SizeConstraint = Enum.SizeConstraint.RelativeYY,
-                Parent = SearchBox,
-            })
-        end
 
         New("ImageLabel", {
             Image = ResizeIcon and ResizeIcon.Url or "",
@@ -5767,17 +5443,10 @@ local FooterLabel = New("TextLabel", {
     function Window:ShowTabInfo(Name, Description)
         CurrentTabLabel.Text = Name
         CurrentTabDescription.Text = Description
-
-        if IsDefaultSearchbarSize then
-            SearchBox.Size = UDim2.fromScale(0.5, 1)
-        end
         CurrentTabInfo.Visible = true
     end
     function Window:HideTabInfo()
         CurrentTabInfo.Visible = false
-        if IsDefaultSearchbarSize then
-            SearchBox.Size = UDim2.fromScale(1, 1)
-        end
     end
 
     function Window:AddTab(...)
@@ -6453,10 +6122,6 @@ local FooterLabel = New("TextLabel", {
             Tab:RefreshSides()
 
             Library.ActiveTab = Tab
-
-            if Library.Searching then
-                Library:UpdateSearch(Library.SearchText)
-            end
         end
 
         function Tab:Hide()
@@ -6691,10 +6356,6 @@ local FooterLabel = New("TextLabel", {
             Tab:RefreshSides()
 
             Library.ActiveTab = Tab
-
-            if Library.Searching then
-                Library:UpdateSearch(Library.SearchText)
-            end
         end
 
         function Tab:Hide()
@@ -6892,10 +6553,6 @@ local FooterLabel = New("TextLabel", {
             LockButton.Button.Position = UDim2.fromOffset(6, 46)
         end
     end
-
-    SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
-        Library:UpdateSearch(SearchBox.Text)
-    end)
 
     Library:GiveSignal(UserInputService.InputBegan:Connect(function(Input: InputObject)
         if Library.Unloaded then
