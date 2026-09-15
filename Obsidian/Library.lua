@@ -3207,16 +3207,24 @@ do
             Parent = Checkbox,
         })
 
-        local CheckImage = New("ImageLabel", {
-            Image = CheckIcon and CheckIcon.Url or "",
-            ImageColor3 = "FontColor",
-            ImageRectOffset = CheckIcon and CheckIcon.ImageRectOffset or Vector2.zero,
-            ImageRectSize = CheckIcon and CheckIcon.ImageRectSize or Vector2.zero,
-            ImageTransparency = 1,
+        local CheckboxAccent = New("Frame", {
+            BackgroundColor3 = "AccentColor",
+            BackgroundTransparency = 1,
             Position = UDim2.fromOffset(2, 2),
             Size = UDim2.new(1, -4, 1, -4),
+            Visible = false,
             Parent = Checkbox,
         })
+        New("UICorner", {
+            CornerRadius = UDim.new(0, math.max(Library.CornerRadius / 2 - 1, 0)),
+            Parent = CheckboxAccent,
+        })
+
+        Library.Registry[Label].TextColor3 = function()
+            return Toggle.Value and Library.Scheme.FontColor or Color3.fromRGB(125, 125, 125)
+        end
+
+        local FillTweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
         function Toggle:UpdateColors()
             Toggle:Display()
@@ -3230,31 +3238,27 @@ do
             CheckboxStroke.Transparency = Toggle.Disabled and 0.5 or 0
 
             if Toggle.Disabled then
-                Label.TextTransparency = 0.8
-                CheckImage.ImageTransparency = 1
+                Label.TextColor3 = Color3.fromRGB(125, 125, 125)
+                CheckboxAccent.BackgroundTransparency = Toggle.Value and 0.7 or 1
+                CheckboxAccent.Visible = Toggle.Value
 
-                if Toggle.Value then
-                    Checkbox.BackgroundColor3 = Library.Scheme.AccentColor
-                    Library.Registry[Checkbox].BackgroundColor3 = "AccentColor"
-                else
-                    Checkbox.BackgroundColor3 = Library.Scheme.BackgroundColor
-                    Library.Registry[Checkbox].BackgroundColor3 = "BackgroundColor"
-                end
+                Checkbox.BackgroundColor3 = Library.Scheme.BackgroundColor
+                Library.Registry[Checkbox].BackgroundColor3 = "BackgroundColor"
 
                 return
             end
 
-            TweenService:Create(Label, Library.TweenInfo, {
-                TextTransparency = Toggle.Value and 0 or 0.4,
+            TweenService:Create(Label, FillTweenInfo, {
+                TextColor3 = Toggle.Value and Library.Scheme.FontColor or Color3.fromRGB(125, 125, 125),
+            }):Play()
+            TweenService:Create(CheckboxAccent, FillTweenInfo, {
+                BackgroundTransparency = Toggle.Value and 0 or 1,
             }):Play()
 
-            CheckImage.ImageTransparency = 1
+            CheckboxAccent.Visible = Toggle.Value
 
-            TweenService:Create(Checkbox, Library.TweenInfo, {
-                BackgroundColor3 = Toggle.Value and Library.Scheme.AccentColor or Library.Scheme.MainColor,
-            }):Play()
-
-            Library.Registry[Checkbox].BackgroundColor3 = Toggle.Value and "AccentColor" or "MainColor"
+            Checkbox.BackgroundColor3 = Library.Scheme.MainColor
+            Library.Registry[Checkbox].BackgroundColor3 = "MainColor"
         end
 
         function Toggle:OnChanged(Func)
