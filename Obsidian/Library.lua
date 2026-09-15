@@ -5656,6 +5656,7 @@ local FooterLabel = New("TextLabel", {
                 Parent = SearchBox,
             })
         end
+
         New("ImageLabel", {
             Image = ResizeIcon and ResizeIcon.Url or "",
             ImageColor3 = "FontColor",
@@ -5689,7 +5690,7 @@ local FooterLabel = New("TextLabel", {
         Container = New("Frame", {
 	        BackgroundColor3 = Library.Scheme.BackgroundColor,
 	        Name = "Container",
-	        Position = UDim2.fromOffset(0, 90),
+	        Position = UDim2.fromOffset(0, 89),
 	        Size = UDim2.new(1, 0, 1, -90),
 	        Parent = MainFrame,
         })
