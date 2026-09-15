@@ -87,7 +87,6 @@ local Library = {
     DPIScale = 1,
     CornerRadius = 4,
 
-    IsLightTheme = false,
     Scheme = {
         BackgroundColor = Color3.fromRGB(13, 13, 13),
         MainColor = Color3.fromRGB(13, 13, 13),
@@ -868,7 +867,6 @@ function Library:ChangeCursorIconSize(Size: UDim2)
 end
 
 function Library:GetBetterColor(Color: Color3, Add: number): Color3
-    Add = Add * (Library.IsLightTheme and -4 or 2)
     return Color3.fromRGB(
         math.clamp(Color.R * 255 + Add, 0, 255),
         math.clamp(Color.G * 255 + Add, 0, 255),
@@ -3941,6 +3939,11 @@ do
         New("UIPadding", {
             PaddingLeft = UDim.new(0, 8),
             PaddingRight = UDim.new(0, 4),
+            Parent = Display,
+        })
+
+        New("UICorner", {
+            CornerRadius = UDim.new(0, Library.CornerRadius / 2),
             Parent = Display,
         })
 
