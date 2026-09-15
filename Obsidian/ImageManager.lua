@@ -8,14 +8,14 @@ local Repository = "https://raw.githubusercontent.com/feofelact/UI-Library-s/ref
 local ImageManagerAssets = {
     TransparencyTexture = {
         RobloxId = 139785960036434,
-        Path = "UI-Library-s/Assets/TransparencyTexture.png",
+        Path = "UI-Library-s/Obsidian/Assets/TransparencyTexture.png",
         URL = Repository .. "Assets/TransparencyTexture.png",
         Id = nil,
     },
 
     SaturationMap = {
         RobloxId = 4155801252,
-        Path = "UI-Library-s/Assets/SaturationMap.png",
+        Path = "UI-Library-s/Obsidian/Assets/SaturationMap.png",
         URL = Repository .. "Assets/SaturationMap.png",
         Id = nil,
     },
