@@ -3435,13 +3435,10 @@ do
             Parent = Box,
         })
 
-        table.insert(
-            Library.Corners,
-            New("UICorner", {
-                CornerRadius = UDim.new(0, Library.CornerRadius / 2),
-                Parent = Box,
-            })
-        )
+        New("UICorner", {
+            CornerRadius = UDim.new(0, Library.CornerRadius / 2),
+            Parent = Box,
+        })
 
         function Input:UpdateColors()
             if Library.Unloaded then
@@ -3944,11 +3941,6 @@ do
         New("UIPadding", {
             PaddingLeft = UDim.new(0, 8),
             PaddingRight = UDim.new(0, 4),
-            Parent = Display,
-        })
-
-        New("UICorner", {
-            CornerRadius = UDim.new(0, Library.CornerRadius / 2),
             Parent = Display,
         })
 
