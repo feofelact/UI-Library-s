@@ -5740,11 +5740,11 @@ local FooterLabel = New("TextLabel", {
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.fromOffset(80, 60),
+                Size = UDim2.fromOffset(74, 56),
                 Text = "",
                 Parent = Tabs,
             })
-
+            
             local ButtonPadding = New("UIPadding", {
                 PaddingBottom = UDim.new(0, 4),
                 PaddingLeft = UDim.new(0, 4),
@@ -5771,7 +5771,7 @@ local FooterLabel = New("TextLabel", {
                     BackgroundTransparency = 1,
                     AnchorPoint = Vector2.new(0.5, 0),
                     Position = UDim2.new(0.5, 0, 0, 10),
-                    Size = UDim2.new(0, 18, 0, 18),
+                    Size = UDim2.new(0, 22, 0, 22),
                     Image = Icon.Url,
                     ImageColor3 = Icon.Custom and "WhiteColor" or "AccentColor",
                     ImageRectOffset = Icon.ImageRectOffset,
