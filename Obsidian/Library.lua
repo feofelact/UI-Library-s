@@ -6,7 +6,7 @@ local GetHui = gethui or function() return CoreGui end
 --
 local Instance_new = Instance.new;
 local Color3_fromRGB, Color3_new, Color3_fromHSV, Color3_fromHex = Color3.fromRGB, Color3.new, Color3.fromHSV, Color3.fromHex;
-local table_clear, table_insert, table_remove, table_unpack, table_find, table_sort, table_concat = table.clear, table.insert, table_remove, table_unpack, table_find, table_sort, table_concat;
+local table_clear, table_insert, table_remove, table_unpack, table_find, table_sort, table_concat = table_clear, table_insert, table_remove, table_unpack, table_find, table_sort, table_concat;
 local string_find, string_match, string_format, string_gsub, string_lower, string_upper, string_sub = string.find, string.match, string.format, string.gsub, string.lower, string.upper, string.sub;
 local task_wait, task_spawn, task_delay, task_defer = task.wait, task.spawn, task.delay, task.defer;
 local coroutine_wrap, coroutine_close, coroutine_create, coroutine_resume = coroutine.wrap, coroutine.close, coroutine.create, coroutine.resume;
@@ -77,7 +77,6 @@ local Library = {
     CantDragForced = false,
 
     Signals = {},
-    Dialogues = {},
     ActiveLoading = nil,
     ActiveDialog = nil,
     UnloadSignals = {},
@@ -425,7 +424,7 @@ local function GetPlayers(ExcludeLocalPlayer: boolean?)
     if ExcludeLocalPlayer then
         local Idx = table.find(PlayerList, LocalPlayer)
         if Idx then
-            table.remove(PlayerList, Idx)
+            table_remove(PlayerList, Idx)
         end
     end
 
@@ -601,7 +600,7 @@ end
 function Library:GiveSignal(Connection: RBXScriptConnection | RBXScriptSignal)
     local ConnectionType = typeof(Connection)
     if Connection and (ConnectionType == "RBXScriptConnection" or ConnectionType == "RBXScriptSignal") then
-        table.insert(Library.Signals, Connection)
+        table_insert(Library.Signals, Connection)
     end
 
     return Connection
@@ -827,7 +826,7 @@ do
         Size = UDim2.new(0, 300, 1, -6),
         Parent = ScreenGui,
     })
-    table.insert(
+    table_insert(
         Library.Scales,
         New("UIScale", {
             Parent = NotificationArea,
@@ -1144,7 +1143,7 @@ function Library:AddDraggableLabel(Text: string)
         PaddingTop = UDim.new(0, 6),
         Parent = Label,
     })
-    table.insert(
+    table_insert(
         Library.Scales,
         New("UIScale", {
             Parent = Label,
@@ -1182,7 +1181,7 @@ function Library:AddDraggableButton(Text: string, Func, ExcludeScaling: boolean?
         Parent = Button,
     })
     if not ExcludeScaling then
-        table.insert(
+        table_insert(
             Library.Scales,
             New("UIScale", {
                 Parent = Button,
@@ -1223,7 +1222,7 @@ function Library:AddDraggableMenu(Name: string)
         CornerRadius = UDim.new(0, Library.CornerRadius),
         Parent = Holder,
     })
-    table.insert(
+    table_insert(
         Library.Scales,
         New("UIScale", {
             Parent = Holder,
@@ -1360,7 +1359,7 @@ function Library:AddContextMenu(
             Parent = ScreenGui,
         })
     end
-    table.insert(
+    table_insert(
         Library.Scales,
         New("UIScale", {
             Parent = Menu,
@@ -1497,7 +1496,7 @@ New("UIPadding", {
     PaddingTop = UDim.new(0, 2),
     Parent = TooltipLabel,
 })
-table.insert(
+table_insert(
     Library.Scales,
     New("UIScale", {
         Parent = TooltipLabel,
@@ -1562,7 +1561,7 @@ function Library:AddTooltip(InfoStr: string, DisabledInfoStr: string, HoverInsta
     local function GiveSignal(Connection: RBXScriptConnection | RBXScriptSignal)
         local ConnectionType = typeof(Connection)
         if Connection and (ConnectionType == "RBXScriptConnection" or ConnectionType == "RBXScriptSignal") then
-            table.insert(TooltipTable.Signals, Connection)
+            table_insert(TooltipTable.Signals, Connection)
         end
 
         return Connection
@@ -1581,7 +1580,7 @@ function Library:AddTooltip(InfoStr: string, DisabledInfoStr: string, HoverInsta
 
     function TooltipTable:Destroy()
         for Index = #TooltipTable.Signals, 1, -1 do
-            local Connection = table.remove(TooltipTable.Signals, Index)
+            local Connection = table_remove(TooltipTable.Signals, Index)
             if Connection and Connection.Connected then
                 Connection:Disconnect()
             end
@@ -1596,34 +1595,12 @@ function Library:AddTooltip(InfoStr: string, DisabledInfoStr: string, HoverInsta
         end
     end
 
-    table.insert(Tooltips, TooltipLabel)
+    table_insert(Tooltips, TooltipLabel)
     return TooltipTable
 end
 
 function Library:OnUnload(Callback)
-    table.insert(Library.UnloadSignals, Callback)
-end
-
-function Library:Unload()
-    for Index = #Library.Signals, 1, -1 do
-        local Connection = table.remove(Library.Signals, Index)
-        if Connection and Connection.Connected then
-            Connection:Disconnect()
-        end
-    end
-
-    for _, Callback in Library.UnloadSignals do
-        Library:SafeCallback(Callback)
-    end
-
-    for _, Tooltip in Tooltips do
-        Library:SafeCallback(Tooltip.Destroy, Tooltip)
-    end
-
-    Library.Unloaded = true
-    ScreenGui:Destroy()
-
-    getgenv().Library = nil
+    table_insert(Library.UnloadSignals, Callback)
 end
 
 local CheckIcon = Library:GetIcon("check")
@@ -1743,7 +1720,7 @@ do
                     continue
                 end
 
-                table.insert(ActiveModifiers, Name)
+                table_insert(ActiveModifiers, Name)
             end
 
             return ActiveModifiers
@@ -1788,7 +1765,7 @@ do
             local InputModifiers = {}
 
             for _, name in CurrentModifiers do
-                table.insert(InputModifiers, Modifiers[name])
+                table_insert(InputModifiers, Modifiers[name])
             end
 
             return InputModifiers
@@ -1806,7 +1783,7 @@ do
                     continue
                 end
 
-                table.insert(ValidModifiers, name)
+                table_insert(ValidModifiers, name)
             end
 
             return ValidModifiers
@@ -1891,7 +1868,7 @@ do
             KeybindsToggle.LeftLabel = LeftLabel
             KeybindsToggle.ModeLabel = ModeLabel
             KeybindsToggle.Loaded = true
-            table.insert(Library.KeybindToggles, KeybindsToggle)
+            table_insert(Library.KeybindToggles, KeybindsToggle)
         end
 
         local MenuTable = Library:AddContextMenu(Picker, UDim2.fromOffset(62, 0), function()
@@ -2239,7 +2216,7 @@ do
         KeyPicker:Update()
 
         if ParentObj.Addons then
-            table.insert(ParentObj.Addons, KeyPicker)
+            table_insert(ParentObj.Addons, KeyPicker)
         end
 
         KeyPicker.Default = KeyPicker.Value
@@ -2252,7 +2229,7 @@ do
 
     local HueSequenceTable = {}
     for Hue = 0, 1, 0.1 do
-        table.insert(HueSequenceTable, ColorSequenceKeypoint.new(Hue, Color3.fromHSV(Hue, 1, 1)))
+        table_insert(HueSequenceTable, ColorSequenceKeypoint.new(Hue, Color3.fromHSV(Hue, 1, 1)))
     end
     function Functions:AddColorPicker(Idx, Info)
         Info = Library:Validate(Info, Templates.ColorPicker)
@@ -2643,7 +2620,7 @@ do
         ColorPicker:Display()
 
         if ParentObj.Addons then
-            table.insert(ParentObj.Addons, ColorPicker)
+            table_insert(ParentObj.Addons, ColorPicker)
         end
 
         ColorPicker.Default = ColorPicker.Value
@@ -2721,7 +2698,7 @@ do
 
         Groupbox:Resize()
 
-        table.insert(Groupbox.Elements, {
+        table_insert(Groupbox.Elements, {
             Holder = Holder,
             Type = "Divider",
         })
@@ -2829,12 +2806,12 @@ do
         end
 
         Label.Holder = TextLabel
-        table.insert(Groupbox.Elements, Label)
+        table_insert(Groupbox.Elements, Label)
 
         if Data.Idx then
             Labels[Data.Idx] = Label
         else
-            table.insert(Labels, Label)
+            table_insert(Labels, Label)
         end
 
         return Label
@@ -3068,7 +3045,7 @@ do
             if Info.Idx then
                 Buttons[Info.Idx] = SubButton
             else
-                table.insert(Buttons, SubButton)
+                table_insert(Buttons, SubButton)
             end
 
             return SubButton
@@ -3126,12 +3103,12 @@ do
         Groupbox:Resize()
 
         Button.Holder = Holder
-        table.insert(Groupbox.Elements, Button)
+        table_insert(Groupbox.Elements, Button)
 
         if Info.Idx then
             Buttons[Info.Idx] = Button
         else
-            table.insert(Buttons, Button)
+            table_insert(Buttons, Button)
         end
 
         return Button
@@ -3340,7 +3317,7 @@ do
         setmetatable(Toggle, BaseAddons)
 
         Toggle.Holder = Button
-        table.insert(Groupbox.Elements, Toggle)
+        table_insert(Groupbox.Elements, Toggle)
 
         Toggle.Default = Toggle.Value
 
@@ -3514,7 +3491,7 @@ do
         end
 
         if Input.Finished then
-            table.insert(Input.Connections, Box.FocusLost:Connect(function(Enter)
+            table_insert(Input.Connections, Box.FocusLost:Connect(function(Enter)
                 if not Enter then
                     if Input.ClearTextOnBlur then
                         Box.Text = Input.Value
@@ -3526,14 +3503,14 @@ do
                 Input:SetValue(Box.Text)
             end))
         else
-            table.insert(Input.Connections, Box:GetPropertyChangedSignal("Text"):Connect(function()
+            table_insert(Input.Connections, Box:GetPropertyChangedSignal("Text"):Connect(function()
                 if Box.Text == Input.Value then return end
 
                 Input:SetValue(Box.Text)
             end))
         end
 
-        table.insert(Input.Connections, Box.Focused:Connect(function()
+        table_insert(Input.Connections, Box.Focused:Connect(function()
             if Input.Disabled then
                 return
             end
@@ -3544,7 +3521,7 @@ do
             }):Play()
         end))
 
-        table.insert(Input.Connections, Box.FocusLost:Connect(function()
+        table_insert(Input.Connections, Box.FocusLost:Connect(function()
             if Input.Disabled then
                 return
             end
@@ -3563,7 +3540,7 @@ do
         Groupbox:Resize()
 
         Input.Holder = Holder
-        table.insert(Groupbox.Elements, Input)
+        table_insert(Groupbox.Elements, Input)
 
         Input.Default = Input.Value
         if typeof(Info.VerifyValue) == "function" and (Input.Default ~= Input.EmptyReset and Info.VerifyValue(Input.Default) ~= true) then
@@ -3593,7 +3570,7 @@ do
 
             local ElemIdx = table.find(Groupbox.Elements, Input)
             if ElemIdx then
-                table.remove(Groupbox.Elements, ElemIdx)
+                table_remove(Groupbox.Elements, ElemIdx)
             end
 
             Groupbox:Resize()
@@ -3859,7 +3836,7 @@ do
         Groupbox:Resize()
 
         Slider.Holder = Holder
-        table.insert(Groupbox.Elements, Slider)
+        table_insert(Groupbox.Elements, Slider)
 
         Slider.Default = Slider.Value
 
@@ -4029,7 +4006,7 @@ do
                 local Table = {}
 
                 for Value, _ in Dropdown.Value do
-                    table.insert(Table, Value)
+                    table_insert(Table, Value)
                 end
 
                 return Table
@@ -4046,7 +4023,7 @@ do
             for Button, _ in Buttons do
                 Button:Destroy()
             end
-            table.clear(Buttons)
+            table_clear(Buttons)
 
             local Count = 0
             for _, Value in Values do
@@ -4166,10 +4143,10 @@ do
         function Dropdown:AddValues(Values)
             if typeof(Values) == "table" then
                 for _, val in Values do
-                    table.insert(Dropdown.Values, val)
+                    table_insert(Dropdown.Values, val)
                 end
             elseif typeof(Values) == "string" then
-                table.insert(Dropdown.Values, Values)
+                table_insert(Dropdown.Values, Values)
             else
                 return
             end
@@ -4185,10 +4162,10 @@ do
         function Dropdown:AddDisabledValues(DisabledValues)
             if typeof(DisabledValues) == "table" then
                 for _, val in DisabledValues do
-                    table.insert(Dropdown.DisabledValues, val)
+                    table_insert(Dropdown.DisabledValues, val)
                 end
             elseif typeof(DisabledValues) == "string" then
-                table.insert(Dropdown.DisabledValues, DisabledValues)
+                table_insert(Dropdown.DisabledValues, DisabledValues)
             else
                 return
             end
@@ -4235,17 +4212,17 @@ do
         if typeof(Info.Default) == "string" then
             local Index = table.find(Dropdown.Values, Info.Default)
             if Index then
-                table.insert(Defaults, Index)
+                table_insert(Defaults, Index)
             end
         elseif typeof(Info.Default) == "table" then
             for _, Value in next, Info.Default do
                 local Index = table.find(Dropdown.Values, Value)
                 if Index then
-                    table.insert(Defaults, Index)
+                    table_insert(Defaults, Index)
                 end
             end
         elseif Dropdown.Values[Info.Default] ~= nil then
-            table.insert(Defaults, Info.Default)
+            table_insert(Defaults, Info.Default)
         end
 
         if next(Defaults) then
@@ -4274,7 +4251,7 @@ do
         Groupbox:Resize()
 
         Dropdown.Holder = Holder
-        table.insert(Groupbox.Elements, Dropdown)
+        table_insert(Groupbox.Elements, Dropdown)
 
         Dropdown.Default = Defaults
         Dropdown.DefaultValues = Dropdown.Values
@@ -4551,7 +4528,7 @@ do
         Groupbox:Resize()
 
         Viewport.Holder = Holder
-        table.insert(Groupbox.Elements, Viewport)
+        table_insert(Groupbox.Elements, Viewport)
 
         Options[Idx] = Viewport
 
@@ -4696,7 +4673,7 @@ do
         Groupbox:Resize()
 
         Image.Holder = Holder
-        table.insert(Groupbox.Elements, Image)
+        table_insert(Groupbox.Elements, Image)
 
         Options[Idx] = Image
 
@@ -4813,7 +4790,7 @@ do
 
         Video.Holder = Holder
         Video.VideoFrame = VideoFrameInstance
-        table.insert(Groupbox.Elements, Video)
+        table_insert(Groupbox.Elements, Video)
 
         Options[Idx] = Video
 
@@ -4883,7 +4860,7 @@ do
         end
 
         Passthrough.Holder = Holder
-        table.insert(Groupbox.Elements, Passthrough)
+        table_insert(Groupbox.Elements, Passthrough)
 
         Options[Idx] = Passthrough
 
@@ -4982,8 +4959,8 @@ do
 
         setmetatable(Depbox, BaseGroupbox)
 
-        table.insert(Groupbox.DependencyBoxes, Depbox)
-        table.insert(Library.DependencyBoxes, Depbox)
+        table_insert(Groupbox.DependencyBoxes, Depbox)
+        table_insert(Library.DependencyBoxes, Depbox)
 
         return Depbox
     end
@@ -5081,8 +5058,8 @@ do
 
         setmetatable(DepGroupbox, BaseGroupbox)
 
-        table.insert(Tab.DependencyGroupboxes, DepGroupbox)
-        table.insert(Library.DependencyBoxes, DepGroupbox)
+        table_insert(Tab.DependencyGroupboxes, DepGroupbox)
+        table_insert(Library.DependencyBoxes, DepGroupbox)
 
         return DepGroupbox
     end
@@ -5426,7 +5403,7 @@ function Library:CreateWindow(WindowInfo)
             CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
             Parent = MainFrame,
         })
-        table.insert(
+        table_insert(
             Library.Scales,
             New("UIScale", {
                 Parent = MainFrame,
@@ -5787,7 +5764,7 @@ local FooterLabel = New("TextLabel", {
                 })
             end
 
-            table.insert(Library.TabButtons, {
+            table_insert(Library.TabButtons, {
                 Label = TabLabel,
                 Padding = ButtonPadding,
                 Icon = TabIcon,
@@ -6336,7 +6313,7 @@ local FooterLabel = New("TextLabel", {
             if Info.Name then
                 Tab.Tabboxes[Info.Name] = Tabbox
             else
-                table.insert(Tab.Tabboxes, Tabbox)
+                table_insert(Tab.Tabboxes, Tabbox)
             end
 
             return Tabbox
@@ -6498,7 +6475,7 @@ local FooterLabel = New("TextLabel", {
                 })
             end
 
-            table.insert(Library.TabButtons, {
+            table_insert(Library.TabButtons, {
                 Label = TabLabel,
                 Padding = ButtonPadding,
                 Icon = TabIcon,
@@ -6852,7 +6829,83 @@ local FooterLabel = New("TextLabel", {
     return Window
 end
 
-table.clear(Library.Dialogues)
+function Library:Unload()
+    Library.Unloaded = true
+    ScreenGui:Destroy()
+
+    for Index = #Library.Signals, 1, -1 do
+        local Connection = table_remove(Library.Signals, Index)
+
+        if Connection and Connection.Connected then
+            Connection:Disconnect()
+        end
+    end
+
+    for _ = 1, #Library.UnloadSignals do
+        local Callback = table_remove(Library.UnloadSignals, 1)
+
+        if Callback then
+            Library:SafeCallback(Callback)
+        end
+    end
+
+    for Index = #Library.Tabs, 1, -1 do
+        local Tab = table_remove(Library.Tabs, Index)
+
+        if Tab and Tab.Destroy then
+            Library:SafeCallback(Tab.Destroy, Tab)
+        end
+    end
+
+    for Index = #Tooltips, 1, -1 do
+        local Tooltip = table_remove(Tooltips, Index)
+
+        if Tooltip and Tooltip.Destroy then
+            Library:SafeCallback(Tooltip.Destroy, Tooltip)
+        end
+    end
+
+    if Library.ActiveLoading then
+        Library.ActiveLoading:Destroy()
+    end
+
+    table_clear(Library.Registry)
+
+    table_clear(Options)
+    table_clear(Toggles)
+    table_clear(Buttons)
+    table_clear(Labels)
+    table_clear(Tooltips)
+
+    table_clear(Library.Tabs)
+    table_clear(Library.TabButtons)
+
+    table_clear(Library.Scales)
+    table_clear(Library.ScalesOffset)
+
+    table_clear(Library.Corners)
+    table_clear(Library.SpecificCorners)
+    table_clear(Library.ContextMenus)
+
+    table_clear(Library.Notifications)
+    table_clear(Library.Dialogues)
+    table_clear(Library.DraggableElements)
+    table_clear(Library.KeybindToggles)
+    table_clear(Library.DependencyBoxes)
+
+    table_clear(TransparencyCache)
+    table_clear(ActiveTabTweens)
+
+    Library.Toggle = function(...) end
+    Library.ScreenGui = nil
+    Library.Floats = nil
+    Library.Overlay = nil
+    Library.WindowContainer = nil
+    Library.KeybindFrame = nil
+    Library.KeybindContainer = nil
+
+    getgenv().Library = nil
+end
 
 getgenv().Library = Library
 return Library
