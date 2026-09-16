@@ -1,10 +1,14 @@
 local FontManager = {}
 
+local CloneReference = (cloneref or clonereference or function(instance: any)
+    return instance
+end)
+
 FontManager.Library = nil
 FontManager.Folder = "Cortisol.Low/Assets"
 FontManager.Fonts = {}
 
-local HttpService = cloneref(game:GetService("HttpService"))
+local HttpService: HttpService = CloneReference(game:GetService("HttpService"))
 
 function FontManager:SetFolder(Folder: string)
     self.Folder = Folder
