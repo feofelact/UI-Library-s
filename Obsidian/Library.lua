@@ -5536,10 +5536,14 @@ local FooterLabel = New("TextLabel", {
             Size = UDim2.fromScale(1, 1),
             Parent = RightWrapper,
         })
+
+        --[[
         New("UIFlexItem", {
             FlexMode = Enum.UIFlexMode.Grow,
             Parent = Tabs,
         })
+        ]]--
+        
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
             HorizontalAlignment = Enum.HorizontalAlignment.Left,
