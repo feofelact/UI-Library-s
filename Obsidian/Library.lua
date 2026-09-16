@@ -3868,8 +3868,6 @@ do
     end
 
     function Functions:AddDropdown(Idx, Info)
-        if self.Destroyed then return nil end
-
         Info = Library:Validate(Info, Templates.Dropdown)
 
         local Groupbox = self
@@ -3884,22 +3882,14 @@ do
         end
 
         local Dropdown = {
-            Connections = {},
-            Destroyed = false,
-
             Text = typeof(Info.Text) == "string" and Info.Text or nil,
-
             Value = Info.Multi and {} or nil,
             Values = Info.Values,
             DisabledValues = Info.DisabledValues,
-            ValueImages = Info.ValueImages,
-
             Multi = Info.Multi,
-            DragSelect = Info.Multi and not Library.IsMobile and Info.DragSelect == true,
 
             SpecialType = Info.SpecialType,
             ExcludeLocalPlayer = Info.ExcludeLocalPlayer,
-            EnablePlayerImages = Info.EnablePlayerImages,
 
             Tooltip = Info.Tooltip,
             DisabledTooltip = Info.DisabledTooltip,
@@ -3928,192 +3918,63 @@ do
             TextSize = 14,
             TextXAlignment = Enum.TextXAlignment.Left,
             Visible = not not Info.Text,
-            ZIndex = 3,
             Parent = Holder,
         })
 
-        local DisplayContainer = New("TextButton", {
+        local Display = New("TextButton", {
+            Active = not Dropdown.Disabled,
             AnchorPoint = Vector2.new(0, 1),
             BackgroundColor3 = "MainColor",
+            BorderColor3 = "OutlineColor",
+            BorderSizePixel = 1,
             Position = UDim2.fromScale(0, 1),
             Size = UDim2.new(1, 0, 0, 21),
-            Text = "",
-            TextTransparency = 1,
-            ZIndex = 2,
+            Text = "---",
+            TextSize = 14,
+            TextXAlignment = Enum.TextXAlignment.Left,
             Parent = Holder,
         })
 
         New("UIPadding", {
             PaddingLeft = UDim.new(0, 8),
             PaddingRight = UDim.new(0, 4),
-            Parent = DisplayContainer,
-        })
-
-        local DisplayStroke = New("UIStroke", {
-            Color = "OutlineColor",
-            Parent = DisplayContainer,
-        })
-
-        local DropdownCorner = New("UICorner", {
-            TopLeftRadius = UDim.new(0, Library.CornerRadius / 2),
-            TopRightRadius = UDim.new(0, Library.CornerRadius / 2),
-            BottomRightRadius = UDim.new(0, Library.CornerRadius / 2),
-            BottomLeftRadius = UDim.new(0, Library.CornerRadius / 2),
-            Parent = DisplayContainer,
-        }); table.insert(Library.SpecificCorners, DropdownCorner)
-
-        local DisplayImage = New("ImageLabel", {
-            BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(-4, 3),
-            Size = UDim2.fromOffset(16, 16),
-            Image = "",
-            ImageTransparency = 1,
-            ZIndex = 2,
-            Parent = DisplayContainer,
-        })
-
-        local DisplayButton = New("TextButton", {
-            Active = not Dropdown.Disabled,
-            BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, 21),
-            Text = "---",
-            TextSize = 14,
-            TextXAlignment = Enum.TextXAlignment.Left,
-            ZIndex = 2,
-            Parent = DisplayContainer,
+            Parent = Display,
         })
 
         local ArrowImage = New("ImageLabel", {
             AnchorPoint = Vector2.new(1, 0.5),
+            Image = ArrowIcon and ArrowIcon.Url or "",
             ImageColor3 = "FontColor",
+            ImageRectOffset = ArrowIcon and ArrowIcon.ImageRectOffset or Vector2.zero,
+            ImageRectSize = ArrowIcon and ArrowIcon.ImageRectSize or Vector2.zero,
             ImageTransparency = 0.5,
             Position = UDim2.fromScale(1, 0.5),
             Size = UDim2.fromOffset(16, 16),
-            Parent = DisplayContainer,
+            Parent = Display,
         })
-        if ArrowIcon then
-            Library:ApplyLucideIcon(ArrowImage, ArrowIcon)
-        end
 
-        local SearchBox
-        if Info.Searchable then
-            SearchBox = New("TextBox", {
-                BackgroundTransparency = 1,
-                PlaceholderText = "Search...",
-                Position = UDim2.fromOffset(-8, 0),
-                Size = UDim2.new(1, -12, 1, 0),
-                TextSize = 14,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Visible = false,
-                Parent = DisplayButton,
-            })
-            New("UIPadding", {
-                PaddingLeft = UDim.new(0, 8),
-                Parent = SearchBox,
-            })
-
-            table.insert(Dropdown.Connections, SearchBox.Focused:Connect(function()
-                Library.Registry[DisplayStroke].Color = "AccentColor"
-                TweenService:Create(DisplayStroke, Library.TweenInfo, {
-                    Color = Library.Scheme.AccentColor,
-                }):Play()
-            end))
-
-            table.insert(Dropdown.Connections, SearchBox.FocusLost:Connect(function()
-                Library.Registry[DisplayStroke].Color = "OutlineColor"
-                TweenService:Create(DisplayStroke, Library.TweenInfo, {
-                    Color = Library.Scheme.OutlineColor,
-                }):Play()
-            end))
-        end
-
-        local GetValueImage = function(Value, RawValue)
-            if not Value then
-                return nil
-            end
-
-            local ValueImage = nil
-            if Dropdown.SpecialType == "Player" and Dropdown.EnablePlayerImages == true then
-                local PlayerValue = Value
-                if typeof(PlayerValue) ~= "Instance" and RawValue ~= nil then
-                    PlayerValue = RawValue
-                end
-
-                if typeof(PlayerValue) == "Instance" and PlayerValue:IsA("Player") then
-                    ValueImage = { Url = string.format("rbxthumb://type=AvatarHeadShot&id=%s&w=48&h=48", tostring(PlayerValue.UserId)) }
-                end
-            end
-
-            if Dropdown.ValueImages then
-                local IconRef = Dropdown.ValueImages[Value]
-                if IconRef == nil and RawValue ~= nil then
-                    IconRef = Dropdown.ValueImages[RawValue]
-                end
-
-                if IconRef then
-                    ValueImage = Library:GetCustomIcon(IconRef)
-                end
-            end
-
-            return ValueImage
-        end
-
-        local MenuTable
-        MenuTable = Library:AddContextMenu(
-            DisplayContainer,
+        local MenuTable = Library:AddContextMenu(
+            Display,
             function()
-                return UDim2.fromOffset((DisplayContainer.AbsoluteSize.X / Library.DPIScale), 0)
+                return UDim2.fromOffset(Display.AbsoluteSize.X / Library.DPIScale, 0)
             end,
             function()
-                return { 0.5, DisplayContainer.AbsoluteSize.Y + 1.5 }
+                return { 0.5, Display.AbsoluteSize.Y + 1.5 }
             end,
             2,
             function(Active: boolean)
-                DisplayButton.TextTransparency = (Active and SearchBox) and 1 or 0
-
+                Display.TextTransparency = Active and 1 or 0
                 ArrowImage.ImageTransparency = Active and 0 or 0.5
                 ArrowImage.Rotation = Active and 180 or 0
-
-                if SearchBox then
-                    SearchBox.Text = ""
-                    SearchBox.Visible = Active
-                end
-
-                local Half = UDim.new(0, Library.CornerRadius / 2)
-                local Zero = UDim.new(0, 0)
-
-                DropdownCorner.TopLeftRadius = Half
-                DropdownCorner.TopRightRadius = Half
-                DropdownCorner.BottomRightRadius = Active and Zero or Half
-                DropdownCorner.BottomLeftRadius = Active and Zero or Half
-
-                local MenuCorner = MenuTable and MenuTable.Corner
-                if MenuCorner then
-                    MenuCorner.TopLeftRadius = Zero
-                    MenuCorner.TopRightRadius = Zero
-                    MenuCorner.BottomRightRadius = Half
-                    MenuCorner.BottomLeftRadius = Half
-                end
-            end,
-            false,
-            "bottom",
-            "Dropdown"
+            end
         )
         Dropdown.Menu = MenuTable
 
-        local ItemHeight = 21
-        local PoolSize = math.max(1, Info.MaxVisibleDropdownItems + 2)
-        local Pool = {}
-        local FilteredEntries = {}
-
         function Dropdown:RecalculateListSize(Count)
-            local ItemCount = Count or #FilteredEntries
-            local Y = math.clamp(ItemCount * ItemHeight, 0, Info.MaxVisibleDropdownItems * ItemHeight)
-
-            MenuTable.Menu.CanvasSize = UDim2.fromOffset(0, ItemCount * ItemHeight)
+            local Y = math.clamp((Count or GetTableSize(Dropdown.Values)) * 21, 0, Info.MaxVisibleDropdownItems * 21)
 
             MenuTable:SetSize(function()
-                return UDim2.fromOffset((DisplayContainer.AbsoluteSize.X / Library.DPIScale), Y)
+                return UDim2.fromOffset(Display.AbsoluteSize.X / Library.DPIScale, Y)
             end)
         end
 
@@ -4123,8 +3984,7 @@ do
             end
 
             Label.TextTransparency = Dropdown.Disabled and 0.8 or 0
-            DisplayButton.TextTransparency = Dropdown.Disabled and 0.8 or 0
-            DisplayImage.ImageTransparency = Dropdown.Disabled and 0.8 or 0
+            Display.TextTransparency = Dropdown.Disabled and 0.8 or 0
             ArrowImage.ImageTransparency = Dropdown.Disabled and 0.8 or MenuTable.Active and 0 or 0.5
         end
 
@@ -4134,34 +3994,19 @@ do
             end
 
             local Str = ""
-            local ValueImage = nil
-            local IsDictionary = not IsSequentialArray(Dropdown.Values)
 
             if Info.Multi then
-                for Key, RawValue in Dropdown.Values do
-                    local Value = IsDictionary and Key or RawValue
-
+                for _, Value in Dropdown.Values do
                     if Dropdown.Value[Value] then
-                        if not ValueImage then
-                            ValueImage = GetValueImage(Value, RawValue)
-                        end
-
                         Str = Str
-                            .. (Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(RawValue)) or tostring(RawValue))
+                            .. (Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(Value)) or tostring(Value))
                             .. ", "
                     end
                 end
 
                 Str = Str:sub(1, #Str - 2)
             else
-                local DisplayValue = Dropdown.Value
-                if IsDictionary and Dropdown.Value ~= nil then
-                    DisplayValue = Dropdown.Values[Dropdown.Value]
-                end
-
-                ValueImage = GetValueImage(Dropdown.Value, DisplayValue)
-                Str = DisplayValue and tostring(DisplayValue) or ""
-
+                Str = Dropdown.Value and tostring(Dropdown.Value) or ""
                 if Str ~= "" and Info.FormatDisplayValue then
                     Str = tostring(Info.FormatDisplayValue(Str))
                 end
@@ -4171,542 +4016,129 @@ do
                 Str = Str:sub(1, 22) .. "..."
             end
 
-            DisplayButton.Text = (Str == "" and "---" or Str)
-
-            if ValueImage then
-                Library:ApplyLucideIcon(DisplayImage, ValueImage)
-                DisplayImage.ImageTransparency = 0
-            else
-                DisplayImage.Image = ""
-                DisplayImage.ImageTransparency = 1
-            end
-
-            DisplayButton.Size = ValueImage and UDim2.new(1, -8, 0, 21) or UDim2.new(1, 0, 0, 21)
-            DisplayButton.Position = ValueImage and UDim2.fromOffset(14, 0) or UDim2.fromOffset(0, 0)
+            Display.Text = (Str == "" and "---" or Str)
         end
 
         function Dropdown:OnChanged(Func)
             Dropdown.Changed = Func
         end
 
-        function Dropdown:GetActiveValues(ReturnCount)
-            local Table = {}
-
+        function Dropdown:GetActiveValues()
             if Info.Multi then
+                local Table = {}
+
                 for Value, _ in Dropdown.Value do
                     table.insert(Table, Value)
                 end
-            else
-                if Dropdown.Value then
-                    table.insert(Table, Dropdown.Value)
-                end
+
+                return Table
             end
 
-            return ReturnCount == true and GetTableSize(Table) or Table
+            return Dropdown.Value and 1 or 0
         end
 
-        local DragSelecting = false
-        local DragStartIndex = nil
-        local DragPrevMin = nil
-        local DragPrevMax = nil
-        local DragLastIndex = nil
-        local DragInitialValues = {}
-        local DragInputEndedConn = nil
-        local DragInputChangedConn = nil
-
-        local function RecomputeFilteredEntries()
+        local Buttons = {}
+        function Dropdown:BuildDropdownList()
             local Values = Dropdown.Values
             local DisabledValues = Dropdown.DisabledValues
-            local IsDictionary = not IsSequentialArray(Values)
 
-            --// Fuzzy-match dropdown values the same way the sidebar search
-            --// does, so e.g. "clr" can find "Clear Inventory" in a list \\--
-            local SearchQuery = SearchBox and NormalizeSearch(SearchBox.Text:lower()) or ""
-            local IsSearching = SearchQuery ~= ""
-
-            local EnabledList, DisabledList = {}, {}
-            local Pending = {}
-
-            for Key, RawValue in Values do
-                local Value = IsDictionary and Key or RawValue
-
-                local FormattedValue = tostring(Info.FormatListValue and Info.FormatListValue(RawValue) or RawValue)
-
-                local MatchScore = 0
-                if IsSearching then
-                    local Matched, Score = FuzzyScore(FormattedValue:lower(), SearchQuery)
-                    if not Matched then
-                        continue
-                    end
-                    MatchScore = Score
-                end
-
-                local IsDisabled = table.find(DisabledValues, Value) ~= nil
-                    or (RawValue ~= nil and RawValue ~= Value and table.find(DisabledValues, RawValue) ~= nil)
-
-                local Entry = {
-                    Value = Value,
-                    RawValue = RawValue,
-                    FormattedValue = FormattedValue,
-                    IsDisabled = IsDisabled,
-                    ValueImage = GetValueImage(Value, RawValue),
-                    SortKey = Key,
-                    MatchScore = MatchScore,
-                    Order = #Pending + 1,
-                }
-
-                table.insert(Pending, Entry)
+            for Button, _ in Buttons do
+                Button:Destroy()
             end
+            table.clear(Buttons)
 
-            if IsSearching then
-                --// Best matches first; ties fall back to original order \\--
-                table.sort(Pending, function(A, B)
-                    if A.MatchScore ~= B.MatchScore then
-                        return A.MatchScore > B.MatchScore
-                    end
-                    return A.Order < B.Order
-                end)
-            elseif not IsDictionary then
-                table.sort(Pending, function(A, B)
-                    return A.SortKey < B.SortKey
-                end)
-            end
+            local Count = 0
+            for _, Value in Values do
 
-            for _, Entry in Pending do
-                if Entry.IsDisabled then
-                    table.insert(DisabledList, Entry)
-                else
-                    table.insert(EnabledList, Entry)
-                end
-            end
+                Count += 1
+                local IsDisabled = table.find(DisabledValues, Value)
+                local Table = {}
 
-            table.clear(FilteredEntries)
-            for _, Entry in EnabledList do
-                table.insert(FilteredEntries, Entry)
-            end
-            for _, Entry in DisabledList do
-                table.insert(FilteredEntries, Entry)
-            end
-        end
-
-        local function GetFirstVisibleIndex()
-            local Total = #FilteredEntries
-            if Total <= PoolSize then
-                return 1
-            end
-
-            local MaxFirst = Total - PoolSize + 1
-            local ScrollY = MenuTable.Menu.CanvasPosition.Y / Library.DPIScale
-            local Index = math.floor(ScrollY / ItemHeight) + 1
-            return math.clamp(Index, 1, MaxFirst)
-        end
-
-        function Dropdown:RefreshPool()
-            local Total = #FilteredEntries
-            local First = GetFirstVisibleIndex()
-
-            for SlotIndex, Row in Pool do
-                local DataIndex = First + SlotIndex - 1
-                local Entry = FilteredEntries[DataIndex]
-
-                Row.Entry = Entry
-                Row.Index = Entry and DataIndex or nil
-
-                if not Entry then
-                    Row.Container.Visible = false
-                    continue
-                end
-
-                Row.Container.Visible = true
-                Row.Container.Position = UDim2.fromOffset(0, (DataIndex - 1) * ItemHeight)
-
-                local IsLast = DataIndex == Total
-                Row.Corner.BottomRightRadius = IsLast and UDim.new(0, Library.CornerRadius / 2) or UDim.new(0, 0)
-                Row.Corner.BottomLeftRadius = IsLast and UDim.new(0, Library.CornerRadius / 2) or UDim.new(0, 0)
-
-                Row.Button.Text = Entry.FormattedValue
-
-                if Entry.ValueImage then
-                    Row.Image.Visible = true
-                    Library:ApplyLucideIcon(Row.Image, Entry.ValueImage)
-                    Row.Button.Size = UDim2.new(1, -18, 0, ItemHeight)
-                    Row.Button.Position = UDim2.fromOffset(18, 0)
-                else
-                    Row.Image.Visible = false
-                    Row.Button.Size = UDim2.new(1, 0, 0, ItemHeight)
-                    Row.Button.Position = UDim2.fromOffset(0, 0)
-                end
-
-                Row:UpdateButton()
-            end
-        end
-
-        function Dropdown:RunChanged()
-            if Dropdown.Disabled then
-                return
-            end
-
-            Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-            Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
-        end
-
-        local function StopDragSelect()
-            DragSelecting = false
-            DragStartIndex = nil
-            DragPrevMin = nil
-            DragPrevMax = nil
-            DragLastIndex = nil
-            table.clear(DragInitialValues)
-
-            if DragInputEndedConn then
-                DragInputEndedConn:Disconnect()
-                DragInputEndedConn = nil
-            end
-
-            if DragInputChangedConn then
-                DragInputChangedConn:Disconnect()
-                DragInputChangedConn = nil
-            end
-        end
-
-        local DragActiveCount = 0
-
-        local function ApplyDragIndex(Index, InRange)
-            local Entry = FilteredEntries[Index]
-            if not Entry or Entry.IsDisabled then
-                return
-            end
-
-            local Try = DragInitialValues[Entry.Value]
-            if InRange then
-                Try = not Try
-            end
-
-            local WantActive = Try and true or false
-            local IsActive = Dropdown.Value[Entry.Value] and true or false
-            if WantActive == IsActive then
-                return
-            end
-
-            if not WantActive and DragActiveCount == 1 and not Info.AllowNull then
-                return
-            end
-
-            Dropdown.Value[Entry.Value] = WantActive and true or nil
-            DragActiveCount += WantActive and 1 or -1
-        end
-
-        local function ApplyDragRange(From, To, InRange)
-            for Index = From, To do
-                ApplyDragIndex(Index, InRange)
-            end
-        end
-
-        local function UpdateDrag(CurrentIndex)
-            if CurrentIndex == nil or CurrentIndex == DragLastIndex then
-                return
-            end
-
-            DragLastIndex = CurrentIndex
-
-            local Min = math.min(DragStartIndex, CurrentIndex)
-            local Max = math.max(DragStartIndex, CurrentIndex)
-            DragActiveCount = Dropdown:GetActiveValues(true)
-
-            if DragPrevMin == nil then
-                ApplyDragRange(Min, Max, true)
-            else
-                if DragPrevMin < Min then
-                    ApplyDragRange(DragPrevMin, Min - 1, false)
-                end
-                if DragPrevMax > Max then
-                    ApplyDragRange(Max + 1, DragPrevMax, false)
-                end
-                if Min < DragPrevMin then
-                    ApplyDragRange(Min, DragPrevMin - 1, true)
-                end
-                if Max > DragPrevMax then
-                    ApplyDragRange(DragPrevMax + 1, Max, true)
-                end
-            end
-
-            DragPrevMin = Min
-            DragPrevMax = Max
-
-            for _, OtherRow in Pool do
-                OtherRow:UpdateButton()
-            end
-        end
-
-        local function CreatePoolRow()
-            local Row = {
-                Entry = nil,
-                Index = nil
-            }
-
-            local Container = New("Frame", {
-                BackgroundColor3 = "MainColor",
-                BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, ItemHeight),
-                Visible = false,
-                Parent = MenuTable.Menu,
-            })
-
-            local Corner = New("UICorner", {
-                TopLeftRadius = UDim.new(0, 0),
-                TopRightRadius = UDim.new(0, 0),
-                BottomRightRadius = UDim.new(0, 0),
-                BottomLeftRadius = UDim.new(0, 0),
-                Parent = Container,
-            }); table.insert(Library.SpecificCorners, Corner)
-
-            local Image = New("ImageLabel", {
-                BackgroundTransparency = 1,
-                Image = "",
-                ImageTransparency = 0.5,
-                Size = UDim2.fromOffset(16, 16),
-                Position = UDim2.fromOffset(4, 3),
-                Visible = false,
-                Parent = Container,
-            })
-
-            local Button = New("TextButton", {
-                BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, ItemHeight),
-                Text = "",
-                TextSize = 14,
-                TextTransparency = 0.5,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = Container,
-            })
-            New("UIPadding", {
-                PaddingLeft = UDim.new(0, 7),
-                PaddingRight = UDim.new(0, 7),
-                Parent = Button,
-            })
-
-            Row.Container = Container
-            Row.Corner = Corner
-            Row.Image = Image
-            Row.Button = Button
-
-            function Row:UpdateButton()
-                local Entry = Row.Entry
-                if not Entry then
-                    return
-                end
+                local Button = New("TextButton", {
+                    BackgroundColor3 = "MainColor",
+                    BackgroundTransparency = 1,
+                    LayoutOrder = IsDisabled and 1 or 0,
+                    Size = UDim2.new(1, 0, 0, 21),
+                    Text = tostring(Value),
+                    TextSize = 14,
+                    TextTransparency = 0.5,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = MenuTable.Menu,
+                })
+                New("UIPadding", {
+                    PaddingLeft = UDim.new(0, 7),
+                    PaddingRight = UDim.new(0, 7),
+                    Parent = Button,
+                })
 
                 local Selected
                 if Info.Multi then
-                    Selected = Dropdown.Value[Entry.Value]
+                    Selected = Dropdown.Value[Value]
                 else
-                    Selected = Dropdown.Value == Entry.Value
+                    Selected = Dropdown.Value == Value
                 end
 
-                Row.Selected = Selected and true or false
-
-                Container.BackgroundTransparency = Selected and 0 or 1
-                Button.TextTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
-
-                if Entry.ValueImage then
-                    Image.ImageTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
-                end
-            end
-
-            table.insert(Dropdown.Connections, Button.MouseButton1Click:Connect(function()
-                local Entry = Row.Entry
-                if not Entry or Entry.IsDisabled or DragSelecting then
-                    return
-                end
-
-                local Selected
-                if Info.Multi then
-                    Selected = Dropdown.Value[Entry.Value]
-                else
-                    Selected = Dropdown.Value == Entry.Value
-                end
-
-                local Try = not Selected
-                if not (Dropdown:GetActiveValues(true) == 1 and not Try and not Info.AllowNull) then
-                    Selected = Try
+                function Table:UpdateButton()
                     if Info.Multi then
-                        Dropdown.Value[Entry.Value] = Selected and true or nil
+                        Selected = Dropdown.Value[Value]
                     else
-                        Dropdown.Value = Selected and Entry.Value or nil
+                        Selected = Dropdown.Value == Value
                     end
 
-                    for _, OtherRow in Pool do
-                        OtherRow:UpdateButton()
-                    end
+                    Button.BackgroundTransparency = Selected and 0 or 1
+                    Button.TextTransparency = IsDisabled and 0.8 or Selected and 0 or 0.5
                 end
 
-                Row:UpdateButton()
+                if not IsDisabled then
+                    Button.MouseButton1Click:Connect(function()
+                        local Try = not Selected
+
+                        if not (Dropdown:GetActiveValues() == 1 and not Try and not Info.AllowNull) then
+                            Selected = Try
+                            if Info.Multi then
+                                Dropdown.Value[Value] = Selected and true or nil
+                            else
+                                Dropdown.Value = Selected and Value or nil
+                            end
+
+                            for _, OtherButton in Buttons do
+                                OtherButton:UpdateButton()
+                            end
+                        end
+
+                        Table:UpdateButton()
+                        Dropdown:Display()
+
+                        Library:UpdateDependencyBoxes()
+                        Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
+                        Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+                    end)
+                end
+
+                Table:UpdateButton()
                 Dropdown:Display()
 
-                Library:UpdateDependencyBoxes()
-                Dropdown:RunChanged()
-            end))
-
-            table.insert(Dropdown.Connections, Button.MouseEnter:Connect(function()
-                local Entry = Row.Entry
-                if not Entry or Entry.IsDisabled then
-                    return
-                end
-
-                if Row.Selected then
-                    return
-                end
-
-                TweenService:Create(Container, Library.TweenInfo, {
-                    BackgroundTransparency = 0.85,
-                }):Play()
-                TweenService:Create(Button, Library.TweenInfo, {
-                    TextTransparency = 0.25,
-                }):Play()
-
-                if Image then
-                    TweenService:Create(Image, Library.TweenInfo, {
-                        ImageTransparency = 0.25,
-                    }):Play()
-                end
-            end))
-
-            table.insert(Dropdown.Connections, Button.MouseLeave:Connect(function()
-                local Entry = Row.Entry
-                if not Entry or Entry.IsDisabled then
-                    return
-                end
-
-                if Row.Selected then
-                    return
-                end
-
-                TweenService:Create(Container, Library.TweenInfo, {
-                    BackgroundTransparency = 1,
-                }):Play()
-                TweenService:Create(Button, Library.TweenInfo, {
-                    TextTransparency = 0.5,
-                }):Play()
-
-                if Image then
-                    TweenService:Create(Image, Library.TweenInfo, {
-                        ImageTransparency = 0.5,
-                    }):Play()
-                end
-            end))
-
-            table.insert(Dropdown.Connections, Button.InputBegan:Connect(function(StartInput)
-                if not (Info.Multi and Dropdown.DragSelect and not Library.IsMobile) then
-                    return
-                end
-
-                local Entry = Row.Entry
-                if not Entry or Entry.IsDisabled then
-                    return
-                end
-
-                if not IsMouseInput(StartInput) then
-                    return
-                end
-
-                DragSelecting = true
-                DragStartIndex = Row.Index
-                table.clear(DragInitialValues)
-
-                for _, FilteredEntry in FilteredEntries do
-                    DragInitialValues[FilteredEntry.Value] = Dropdown.Value[FilteredEntry.Value]
-                end
-
-                UpdateDrag(Row.Index)
-
-                if DragInputEndedConn then DragInputEndedConn:Disconnect() end
-                if DragInputChangedConn then DragInputChangedConn:Disconnect() end
-
-                DragInputChangedConn = Library:GiveSignal(UserInputService.InputChanged:Connect(function(ChangeInput)
-                    if not IsMovementInput(ChangeInput) and ChangeInput ~= StartInput then
-                        return
-                    end
-
-                    local Pos = ChangeInput.Position
-                    for _, OtherRow in Pool do
-                        if OtherRow.Entry and Library:MouseIsOverFrame(OtherRow.Button, Pos) then
-                            UpdateDrag(OtherRow.Index)
-                            break
-                        end
-                    end
-                end))
-
-                DragInputEndedConn = Library:GiveSignal(UserInputService.InputEnded:Connect(function(EndInput)
-                    if EndInput ~= StartInput and not (IsMouseInput(EndInput) and EndInput.UserInputType == StartInput.UserInputType) then
-                        return
-                    end
-
-                    Dropdown:Display()
-                    Library:UpdateDependencyBoxes()
-                    Dropdown:RunChanged()
-
-                    StopDragSelect()
-                end))
-
-                table.insert(Dropdown.Connections, DragInputEndedConn)
-                table.insert(Dropdown.Connections, DragInputChangedConn)
-            end))
-
-            return Row
-        end
-
-        function Dropdown:BuildDropdownList()
-            StopDragSelect()
-
-            RecomputeFilteredEntries()
-
-            MenuTable.Menu.CanvasPosition = Vector2.new(0, 0)
-
-            Dropdown:RefreshPool()
-            Dropdown:RecalculateListSize(#FilteredEntries)
-        end
-
-        for _ = 1, PoolSize do
-            table.insert(Pool, CreatePoolRow())
-        end
-
-        table.insert(Dropdown.Connections, MenuTable.Menu:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
-            Dropdown:RefreshPool()
-        end))
-
-        local function ValueExists(Val)
-            if IsSequentialArray(Dropdown.Values) then
-                for _, Existing in Dropdown.Values do
-                    if Existing == Val then
-                        return true
-                    end
-                end
-
-                return false
+                Buttons[Button] = Table
             end
 
-            return Dropdown.Values[Val] ~= nil
+            Dropdown:RecalculateListSize(Count)
         end
 
         function Dropdown:SetValue(Value)
             if Info.Multi then
-                if typeof(Value) == "string" then
-                    Value = if Value == "" then {} else { [Value] = true }
-                end
-
                 local Table = {}
 
                 for Val, Active in Value or {} do
                     if typeof(Active) ~= "boolean" then
                         Table[Active] = true
-                    elseif Active and ValueExists(Val) then
+                    elseif Active and table.find(Dropdown.Values, Val) then
                         Table[Val] = true
                     end
                 end
 
                 Dropdown.Value = Table
             else
-                if ValueExists(Value) then
+                if table.find(Dropdown.Values, Value) then
                     Dropdown.Value = Value
                 elseif not Value then
                     Dropdown.Value = nil
@@ -4714,74 +4146,31 @@ do
             end
 
             Dropdown:Display()
-            for _, Row in Pool do
-                Row:UpdateButton()
+            for _, Button in Buttons do
+                Button:UpdateButton()
             end
 
             if not Dropdown.Disabled then
                 Library:UpdateDependencyBoxes()
+                Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
+                Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
             end
-
-            Dropdown:RunChanged()
         end
 
         function Dropdown:SetValues(Values)
             Dropdown.Values = Values
-
-            local Changed = false
-            if Info.Multi then
-                for Val in Dropdown.Value do
-                    if not ValueExists(Val) then
-                        Dropdown.Value[Val] = nil
-                        Changed = true
-                    end
-                end
-
-            elseif Dropdown.Value ~= nil and not ValueExists(Dropdown.Value) then
-                Dropdown.Value = nil
-                Changed = true
-            end
-
             Dropdown:BuildDropdownList()
-            Dropdown:Display()
-
-            if Changed and not Dropdown.Disabled then
-                Library:UpdateDependencyBoxes()
-            end
-
-            if Changed then
-                Dropdown:RunChanged()
-            end
         end
 
         function Dropdown:AddValues(Values)
-            if typeof(Values) ~= "table" and typeof(Values) ~= "string" then
-                return
-            end
-
-            local IsDictionary = not IsSequentialArray(Dropdown.Values)
-            if IsDictionary then
-                if typeof(Values) == "string" then
-                    Dropdown.Values[Values] = Values
-
-                elseif IsSequentialArray(Values) then
-                    for _, Val in Values do
-                        Dropdown.Values[Val] = Val
-                    end
-
-                else
-                    for Key, Val in Values do
-                        Dropdown.Values[Key] = Val
-                    end
+            if typeof(Values) == "table" then
+                for _, val in Values do
+                    table.insert(Dropdown.Values, val)
                 end
+            elseif typeof(Values) == "string" then
+                table.insert(Dropdown.Values, Values)
             else
-                if typeof(Values) == "table" then
-                    for _, Val in Values do
-                        table.insert(Dropdown.Values, Val)
-                    end
-                else
-                    table.insert(Dropdown.Values, Values)
-                end
+                return
             end
 
             Dropdown:BuildDropdownList()
@@ -4806,27 +4195,6 @@ do
             Dropdown:BuildDropdownList()
         end
 
-        function Dropdown:SetValueImages(ValueImages)
-            if typeof(ValueImages) ~= "table" then
-                return
-            end
-
-            Dropdown.ValueImages = ValueImages
-            Dropdown:BuildDropdownList()
-        end
-
-        function Dropdown:AddValueImages(ValueImages)
-            if typeof(ValueImages) ~= "table" then
-                return
-            end
-
-            for key, val in ValueImages do
-                Dropdown.ValueImages[key] = val
-            end
-
-            Dropdown:BuildDropdownList()
-        end
-
         function Dropdown:SetDisabled(Disabled: boolean)
             Dropdown.Disabled = Disabled
 
@@ -4835,10 +4203,8 @@ do
             end
 
             MenuTable:Close()
-            DisplayButton.Active = not Dropdown.Disabled
+            Display.Active = not Dropdown.Disabled
             Dropdown:UpdateColors()
-
-            Library:UpdateDependencyBoxes()
         end
 
         function Dropdown:SetVisible(Visible: boolean)
@@ -4856,85 +4222,48 @@ do
             Label.Visible = not not Text
         end
 
-        function Dropdown:SetDragSelect(Value: boolean)
-            if not Info.Multi or Library.IsMobile then
-                Value = false
-            end
-
-            Dropdown.DragSelect = Value == true
-            Dropdown:BuildDropdownList()
-        end
-
-        local ToggleDropdown = function()
+        Display.MouseButton1Click:Connect(function()
             if Dropdown.Disabled then
                 return
             end
 
             MenuTable:Toggle()
+        end)
+
+        local Defaults = {}
+        if typeof(Info.Default) == "string" then
+            local Index = table.find(Dropdown.Values, Info.Default)
+            if Index then
+                table.insert(Defaults, Index)
+            end
+        elseif typeof(Info.Default) == "table" then
+            for _, Value in next, Info.Default do
+                local Index = table.find(Dropdown.Values, Value)
+                if Index then
+                    table.insert(Defaults, Index)
+                end
+            end
+        elseif Dropdown.Values[Info.Default] ~= nil then
+            table.insert(Defaults, Info.Default)
         end
 
-        table.insert(Dropdown.Connections, DisplayContainer.MouseButton1Click:Connect(ToggleDropdown))
-        table.insert(Dropdown.Connections, DisplayButton.MouseButton1Click:Connect(ToggleDropdown))
-
-        if SearchBox then
-            table.insert(Dropdown.Connections, SearchBox:GetPropertyChangedSignal("Text"):Connect(Dropdown.BuildDropdownList))
-        end
-
-        local Defaults = (function()
-            local Resolved = {}
-            local Default = Info.Default
-            if Default == nil then
-                return Resolved
-            end
-
-            local IsDictionary = not IsSequentialArray(Dropdown.Values)
-            local function ResolveOne(Candidate)
-                if IsDictionary then
-                    return Dropdown.Values[Candidate] ~= nil and Candidate or nil
+        if next(Defaults) then
+            for i = 1, #Defaults do
+                local Index = Defaults[i]
+                if Info.Multi then
+                    Dropdown.Value[Dropdown.Values[Index]] = true
+                else
+                    Dropdown.Value = Dropdown.Values[Index]
                 end
 
-                for _, Existing in Dropdown.Values do
-                    if Existing == Candidate then
-                        return Existing
-                    end
+                if not Info.Multi then
+                    break
                 end
-
-                return nil
-            end
-
-            local DefaultType = typeof(Default)
-            if DefaultType == "string" then
-                local Value = ResolveOne(Default)
-                if Value ~= nil then
-                    table.insert(Resolved, Value)
-                end
-
-            elseif DefaultType == "table" then
-                for _, Candidate in Default do
-                    local Value = ResolveOne(Candidate)
-                    if Value ~= nil then
-                        table.insert(Resolved, Value)
-                    end
-                end
-
-            elseif Dropdown.Values[Default] ~= nil then
-                table.insert(Resolved, IsDictionary and Default or Dropdown.Values[Default])
-            end
-
-            return Resolved
-        end)()
-
-        for _, SelectValue in Defaults do
-            if Info.Multi then
-                Dropdown.Value[SelectValue] = true
-            else
-                Dropdown.Value = SelectValue
-                break
             end
         end
 
         if typeof(Dropdown.Tooltip) == "string" or typeof(Dropdown.DisabledTooltip) == "string" then
-            Dropdown.TooltipTable = Library:AddTooltip(Dropdown.Tooltip, Dropdown.DisabledTooltip, DisplayContainer)
+            Dropdown.TooltipTable = Library:AddTooltip(Dropdown.Tooltip, Dropdown.DisabledTooltip, Display)
             Dropdown.TooltipTable.Disabled = Dropdown.Disabled
         end
 
@@ -4950,38 +4279,6 @@ do
         Dropdown.DefaultValues = Dropdown.Values
 
         Options[Idx] = Dropdown
-
-        function Dropdown:Destroy()
-            Dropdown.Destroyed = true
-
-            StopDragSelect()
-
-            if Dropdown.Connections then
-                for _, Connection in Dropdown.Connections do
-                    Connection:Disconnect()
-                end
-            end
-
-            if Dropdown.TooltipTable then
-                Dropdown.TooltipTable:Destroy()
-            end
-
-            if MenuTable then
-                MenuTable:Destroy()
-            end
-
-            if Holder then
-                Holder:Destroy()
-            end
-
-            local ElemIdx = table.find(Groupbox.Elements, Dropdown)
-            if ElemIdx then
-                table.remove(Groupbox.Elements, ElemIdx)
-            end
-
-            Groupbox:Resize()
-            Options[Idx] = nil
-        end
 
         return Dropdown
     end
