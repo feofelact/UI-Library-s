@@ -5572,8 +5572,7 @@ local FooterLabel = New("TextLabel", {
             Parent = Tabs,
         })
         New("UIPadding", {
-            PaddingLeft = UDim.new(0, 2),
-            PaddingRight = UDim.new(0, 6),
+            PaddingBottom = UDim.new(0, 4),
             Parent = Tabs,
         })
 
@@ -6853,86 +6852,7 @@ local FooterLabel = New("TextLabel", {
     return Window
 end
 
-function Library:Unload()
-    Library.Unloaded = true
-
-    for Index = #Library.Signals, 1, -1 do
-        local Connection = table_remove(Library.Signals, Index)
-
-        if Connection and Connection.Connected then
-            Connection:Disconnect()
-        end
-    end
-
-    for _ = 1, #Library.UnloadSignals do
-        local Callback = table_remove(Library.UnloadSignals, 1)
-
-        if Callback then
-            Library:SafeCallback(Callback)
-        end
-    end
-
-    for Index = #Library.Tabs, 1, -1 do
-        local Tab = table_remove(Library.Tabs, Index)
-
-        if Tab and Tab.Destroy then
-            Library:SafeCallback(Tab.Destroy, Tab)
-        end
-    end
-
-    for Index = #Tooltips, 1, -1 do
-        local Tooltip = table_remove(Tooltips, Index)
-
-        if Tooltip and Tooltip.Destroy then
-            Library:SafeCallback(Tooltip.Destroy, Tooltip)
-        end
-    end
-
-    if Library.ActiveLoading then
-        Library.ActiveLoading:Destroy()
-    end
-
-    if ScreenGui then
-        ScreenGui:Destroy()
-    end
-
-    table.clear(Library.Registry)
-
-    table.clear(Options)
-    table.clear(Toggles)
-    table.clear(Buttons)
-    table.clear(Labels)
-    table.clear(Tooltips)
-
-    table.clear(Library.Tabs)
-    table.clear(Library.TabButtons)
-
-    table.clear(Library.Scales)
-    table.clear(Library.ScalesOffset)
-
-    table.clear(Library.Corners)
-    table.clear(Library.SpecificCorners)
-    table.clear(Library.ContextMenus)
-
-    table.clear(Library.Notifications)
-    table.clear(Library.Dialogues)
-    table.clear(Library.DraggableElements)
-    table.clear(Library.KeybindToggles)
-    table.clear(Library.DependencyBoxes)
-
-    table.clear(TransparencyCache)
-    table.clear(ActiveTabTweens)
-
-    Library.Toggle = function(...) end
-    Library.ScreenGui = nil
-    Library.Floats = nil
-    Library.Overlay = nil
-    Library.WindowContainer = nil
-    Library.KeybindFrame = nil
-    Library.KeybindContainer = nil
-
-    getgenv().Library = nil
-end
+table_clear(Library.Signals)
 
 getgenv().Library = Library
 return Library
