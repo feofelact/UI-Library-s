@@ -1603,6 +1603,84 @@ function Library:OnUnload(Callback)
     table_insert(Library.UnloadSignals, Callback)
 end
 
+function Library:Unload()
+    Library.Unloaded = true
+    ScreenGui:Destroy()
+
+    for Index = #Library.Signals, 1, -1 do
+        local Connection = table_remove(Library.Signals, Index)
+
+        if Connection and Connection.Connected then
+            Connection:Disconnect()
+        end
+    end
+
+    for _ = 1, #Library.UnloadSignals do
+        local Callback = table_remove(Library.UnloadSignals, 1)
+
+        if Callback then
+            Library:SafeCallback(Callback)
+        end
+    end
+
+    for Index = #Library.Tabs, 1, -1 do
+        local Tab = table_remove(Library.Tabs, Index)
+
+        if Tab and Tab.Destroy then
+            Library:SafeCallback(Tab.Destroy, Tab)
+        end
+    end
+
+    for Index = #Tooltips, 1, -1 do
+        local Tooltip = table_remove(Tooltips, Index)
+
+        if Tooltip and Tooltip.Destroy then
+            Library:SafeCallback(Tooltip.Destroy, Tooltip)
+        end
+    end
+
+    if Library.ActiveLoading then
+        Library.ActiveLoading:Destroy()
+    end
+
+    table_clear(Library.Registry)
+
+    table_clear(Options)
+    table_clear(Toggles)
+    table_clear(Buttons)
+    table_clear(Labels)
+    table_clear(Tooltips)
+
+    table_clear(Library.Tabs)
+    table_clear(Library.TabButtons)
+
+    table_clear(Library.Scales)
+    table_clear(Library.ScalesOffset)
+
+    table_clear(Library.Corners)
+    table_clear(Library.SpecificCorners)
+    table_clear(Library.ContextMenus)
+
+    table_clear(Library.Notifications)
+    table_clear(Library.Dialogues)
+    table_clear(Library.DraggableElements)
+    table_clear(Library.KeybindToggles)
+    table_clear(Library.DependencyBoxes)
+
+    table_clear(TransparencyCache)
+    table_clear(ActiveTabTweens)
+
+    Library.Toggle = function(...) end
+    Library.ScreenGui = nil
+    Library.Floats = nil
+    Library.Overlay = nil
+    Library.WindowContainer = nil
+    Library.KeybindFrame = nil
+    Library.KeybindContainer = nil
+
+    getgenv().Library = nil
+end
+
 local CheckIcon = Library:GetIcon("check")
 local ArrowIcon = Library:GetIcon("chevron-up")
 local ResizeIcon = Library:GetIcon("move-diagonal-2")
@@ -5543,7 +5621,7 @@ local FooterLabel = New("TextLabel", {
             Parent = Tabs,
         })
         ]]--
-        
+
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
             HorizontalAlignment = Enum.HorizontalAlignment.Left,
@@ -6831,84 +6909,6 @@ local FooterLabel = New("TextLabel", {
     end))
 
     return Window
-end
-
-function Library:Unload()
-    Library.Unloaded = true
-    ScreenGui:Destroy()
-
-    for Index = #Library.Signals, 1, -1 do
-        local Connection = table_remove(Library.Signals, Index)
-
-        if Connection and Connection.Connected then
-            Connection:Disconnect()
-        end
-    end
-
-    for _ = 1, #Library.UnloadSignals do
-        local Callback = table_remove(Library.UnloadSignals, 1)
-
-        if Callback then
-            Library:SafeCallback(Callback)
-        end
-    end
-
-    for Index = #Library.Tabs, 1, -1 do
-        local Tab = table_remove(Library.Tabs, Index)
-
-        if Tab and Tab.Destroy then
-            Library:SafeCallback(Tab.Destroy, Tab)
-        end
-    end
-
-    for Index = #Tooltips, 1, -1 do
-        local Tooltip = table_remove(Tooltips, Index)
-
-        if Tooltip and Tooltip.Destroy then
-            Library:SafeCallback(Tooltip.Destroy, Tooltip)
-        end
-    end
-
-    if Library.ActiveLoading then
-        Library.ActiveLoading:Destroy()
-    end
-
-    table_clear(Library.Registry)
-
-    table_clear(Options)
-    table_clear(Toggles)
-    table_clear(Buttons)
-    table_clear(Labels)
-    table_clear(Tooltips)
-
-    table_clear(Library.Tabs)
-    table_clear(Library.TabButtons)
-
-    table_clear(Library.Scales)
-    table_clear(Library.ScalesOffset)
-
-    table_clear(Library.Corners)
-    table_clear(Library.SpecificCorners)
-    table_clear(Library.ContextMenus)
-
-    table_clear(Library.Notifications)
-    table_clear(Library.Dialogues)
-    table_clear(Library.DraggableElements)
-    table_clear(Library.KeybindToggles)
-    table_clear(Library.DependencyBoxes)
-
-    table_clear(TransparencyCache)
-    table_clear(ActiveTabTweens)
-
-    Library.Toggle = function(...) end
-    Library.ScreenGui = nil
-    Library.Floats = nil
-    Library.Overlay = nil
-    Library.WindowContainer = nil
-    Library.KeybindFrame = nil
-    Library.KeybindContainer = nil
-
-    getgenv().Library = nil
 end
 
 getgenv().Library = Library
