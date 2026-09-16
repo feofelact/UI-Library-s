@@ -3867,7 +3867,7 @@ do
         return Slider
     end
 
-    function Funcs:AddDropdown(Idx, Info)
+    function Functions:AddDropdown(Idx, Info)
         if self.Destroyed then return nil end
 
         Info = Library:Validate(Info, Templates.Dropdown)
