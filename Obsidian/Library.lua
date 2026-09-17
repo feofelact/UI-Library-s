@@ -58,27 +58,32 @@ do
 
     local Pixel = RegisterFont("Pixel", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
         Id = "Pixel.ttf",
-        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Pixel.ttf"
+        Font = "https://raw.githubusercontent.com/feofelact/Assets/refs/heads/main/Fonts/Pixel.ttf"
     })
 
     local Tahoma = RegisterFont("Tahoma", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
         Id = "Tahoma.ttf",
-        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Tahoma.ttf"
+        Font = "https://raw.githubusercontent.com/feofelact/Assets/refs/heads/main/Fonts/Tahoma.ttf"
+    })
+
+    local Tahoma8px = RegisterFont("Tahoma", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
+        Id = "Tahoma.ttf",
+        Font = "https://raw.githubusercontent.com/feofelact/Assets/refs/heads/main/Fonts/Tahoma8px.ttf"
     })
 
     local Medodica = RegisterFont("Medodica", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
         Id = "Medodica.ttf",
-        Font = "https://raw.githubusercontent.com/constantdump/assets/main/MedodicaRegular.ttf"
+        Font = "https://raw.githubusercontent.com/feofelact/Assets/refs/heads/main/Fonts/Medodica.ttf"
     })
 
     local Minecraftia = RegisterFont("Minecraftia", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
         Id = "Minecraftia.ttf",
-        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Minecraftia.ttf"
+        Font = "https://raw.githubusercontent.com/feofelact/Assets/refs/heads/main/Fonts/Minecraftia.ttf"
     })
 
     local Templeos = RegisterFont("Templeos", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
         Id = "Templeos.ttf",
-        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Templeos.ttf"
+        Font = "https://raw.githubusercontent.com/feofelact/Assets/refs/heads/main/Fonts/Templeos.ttf"
     })
 
     Fonts = {
@@ -115,7 +120,7 @@ local Library = {
 
     Notifications = {},
 
-    ToggleKeybind = Enum.KeyCode.RightControl,
+    ToggleKeybind = Enum.KeyCode.End,
     TweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
     NotifyTweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
 
@@ -151,7 +156,7 @@ local Library = {
         AccentColor = Color3.fromRGB(216, 126, 157),
         OutlineColor = Color3.fromRGB(35, 35, 35),
         FontColor = Color3.new(1, 1, 1),
-        Font = Fonts["Pixel"],
+        Font = Fonts["Tahoma8px"],
 
         RedColor = Color3.fromRGB(255, 50, 50),
         DarkColor = Color3.new(0, 0, 0),
@@ -241,8 +246,8 @@ local Templates = {
         CornerRadius = 4,
         NotifySide = "Right",
         ShowCustomCursor = true,
-        Font = Fonts["Pixel"],
-        ToggleKeybind = Enum.KeyCode.RightControl,
+        Font = Fonts["Tahoma8px"],
+        ToggleKeybind = Enum.KeyCode.End,
         MobileButtonsSide = "Left",
         UnlockMouseWhileOpen = true,
         Dialog = {
