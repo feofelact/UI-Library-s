@@ -25,7 +25,6 @@ local SoundService = CloneReference(game:GetService("SoundService"))
 local UserInputService = CloneReference(game:GetService("UserInputService"))
 local HttpService = CloneReference(game:GetService("HttpService"))
 local TextService = CloneReference(game:GetService("TextService"))
-local Teams = CloneReference(game:GetService("Teams"))
 local TweenService = CloneReference(game:GetService("TweenService"))
 --
 local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
@@ -476,32 +475,6 @@ local function Round(Value, Rounding)
     end
 
     return tonumber(string.format("%." .. Rounding .. "f", Value))
-end
-
-local function GetPlayers(ExcludeLocalPlayer: boolean?)
-    local PlayerList = Players:GetPlayers()
-
-    if ExcludeLocalPlayer then
-        local Idx = table.find(PlayerList, LocalPlayer)
-        if Idx then
-            table.remove(PlayerList, Idx)
-        end
-    end
-
-    table.sort(PlayerList, function(Player1, Player2)
-        return Player1.Name:lower() < Player2.Name:lower()
-    end)
-
-    return PlayerList
-end
-local function GetTeams()
-    local TeamList = Teams:GetTeams()
-
-    table.sort(TeamList, function(Team1, Team2)
-        return Team1.Name:lower() < Team2.Name:lower()
-    end)
-
-    return TeamList
 end
 
 function Library:UpdateDependencyBoxes()
@@ -3932,14 +3905,6 @@ do
 
         local Groupbox = self
         local Container = Groupbox.Container
-
-        if Info.SpecialType == "Player" then
-            Info.Values = GetPlayers(Info.ExcludeLocalPlayer)
-            Info.AllowNull = true
-        elseif Info.SpecialType == "Team" then
-            Info.Values = GetTeams()
-            Info.AllowNull = true
-        end
 
         local Dropdown = {
             Text = typeof(Info.Text) == "string" and Info.Text or nil,
