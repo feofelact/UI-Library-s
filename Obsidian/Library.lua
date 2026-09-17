@@ -3,6 +3,7 @@ local getgenv = getgenv or function() return Shared end
 local setclipboard = setclipboard or nil
 local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
 local GetHui = gethui or function() return CoreGui end
+print("igger")
 --
 local Instance_new = Instance.new;
 local Color3_fromRGB, Color3_new, Color3_fromHSV, Color3_fromHex = Color3.fromRGB, Color3.new, Color3.fromHSV, Color3.fromHex;
