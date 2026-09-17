@@ -89,6 +89,7 @@ do
     Fonts = {
         ["Pixel"] = Font_new(Pixel, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
         ["Tahoma"] = Font_new(Tahoma, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+        ["Tahoma8px"] = Font_new(Tahoma8px, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
         ["Medodica"] = Font_new(Medodica, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
         ["Minecraftia"] = Font_new(Minecraftia, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
         ["Templeos"] = Font_new(Templeos, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
