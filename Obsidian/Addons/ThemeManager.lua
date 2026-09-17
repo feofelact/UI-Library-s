@@ -171,12 +171,6 @@ do
         for idx, val in pairs(customThemeData or scheme) do
             if idx == "VideoLink" then
                 continue
-            elseif idx == "FontFace" then
-                self.Library:SetFont(Enum.Font[val])
-
-                if self.Library.Options[idx] then
-                    self.Library.Options[idx]:SetValue(val)
-                end
             else
                 self.Library.Scheme[idx] = Color3.fromHex(val)
 
@@ -264,19 +258,6 @@ do
             end
         end
 
-        if typeof(theme["FontFace"]) == "EnumItem" then
-            FinalTheme["FontFace"] = theme["FontFace"].Name
-            LibraryScheme["Font"] = Font.fromEnum(theme["FontFace"])
-
-        elseif typeof(theme["FontFace"]) == "string" then
-            FinalTheme["FontFace"] = theme["FontFace"]
-            LibraryScheme["Font"] = Font.fromEnum(Enum.Font[theme["FontFace"]])
-
-        else
-            FinalTheme["FontFace"] = "Code"
-            LibraryScheme["Font"] = Font.fromEnum(Enum.Font.Code)
-        end
-
         for _, field in { "RedColor", "DarkColor", "WhiteColor" } do
             LibraryScheme[field] = self.Library.Scheme[field]
         end
@@ -297,7 +278,6 @@ do
         for _, field in ThemeFields do
             theme[field] = self.Library.Options[field].Value:ToHex()
         end
-        theme["FontFace"] = self.Library.Options["FontFace"].Value
 
         writefile(self.Folder .. "/themes/" .. file .. ".json", HttpService:JSONEncode(theme))
     end
@@ -358,11 +338,6 @@ do
             :AddLabel("Outline color")
             :AddColorPicker("OutlineColor", { Default = self.Library.Scheme.OutlineColor })
         groupbox:AddLabel("Font color"):AddColorPicker("FontColor", { Default = self.Library.Scheme.FontColor })
-        groupbox:AddDropdown("FontFace", {
-            Text = "Font Face",
-            Default = "Code",
-            Values = { "BuilderSans", "Code", "Fantasy", "Gotham", "Jura", "Roboto", "RobotoMono", "SourceSans" },
-        })
 
         local ThemesArray = {}
         for Name, Theme in pairs(self.BuiltInThemes) do
