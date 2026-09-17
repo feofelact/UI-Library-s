@@ -450,10 +450,6 @@ do
         self.Library.Options.AccentColor:OnChanged(UpdateTheme)
         self.Library.Options.OutlineColor:OnChanged(UpdateTheme)
         self.Library.Options.FontColor:OnChanged(UpdateTheme)
-        self.Library.Options.FontFace:OnChanged(function(Value)
-            self.Library:SetFont(Enum.Font[Value])
-            self.Library:UpdateColorsUsingRegistry()
-        end)
     end
 
     function ThemeManager:CreateGroupBox(tab)
