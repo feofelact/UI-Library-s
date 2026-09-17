@@ -31,6 +31,65 @@ local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local Mouse = CloneReference(LocalPlayer:GetMouse())
 local MouseLocation = UserInputService:GetMouseLocation()
 --
+do
+    local RegisterFont = function(Name, Weight, Style, Asset)
+        local AssetPath = "Cortisol.Low/Assets/" .. Asset.Id;
+
+        if not isfile(AssetPath) or #readfile(AssetPath) < 100 then
+            writefile(AssetPath, game:HttpGet(Asset.Font, true))
+        end;
+
+        local Data = {
+            name = Name,
+            faces = {
+                {
+                    name = "Regular",
+                    weight = Weight,
+                    style = Style,
+                    assetId = getcustomasset(AssetPath)
+                }
+            }
+        }
+
+        local FontPath = "Cortisol.Low/Assets/" .. Name .. ".Font"
+        writefile(FontPath, HttpService:JSONEncode(Data))
+        return getcustomasset(FontPath)
+    end;
+
+    local Pixel = RegisterFont("Pixel", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
+        Id = "Pixel.ttf",
+        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Pixel.ttf"
+    })
+
+    local Tahoma = RegisterFont("Tahoma", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
+        Id = "Tahoma.ttf",
+        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Tahoma.ttf"
+    })
+
+    local Medodica = RegisterFont("Medodica", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
+        Id = "Medodica.ttf",
+        Font = "https://raw.githubusercontent.com/constantdump/assets/main/MedodicaRegular.ttf"
+    })
+
+    local Minecraftia = RegisterFont("Minecraftia", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
+        Id = "Minecraftia.ttf",
+        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Minecraftia.ttf"
+    })
+
+    local Templeos = RegisterFont("Templeos", Enum.FontWeight.Regular, Enum.FontStyle.Normal, {
+        Id = "Templeos.ttf",
+        Font = "https://raw.githubusercontent.com/constantdump/assets/main/Templeos.ttf"
+    })
+
+    Fonts = {
+        ["Pixel"] = Font_new(Pixel, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+        ["Tahoma"] = Font_new(Tahoma, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+        ["Medodica"] = Font_new(Medodica, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+        ["Minecraftia"] = Font_new(Minecraftia, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+        ["Templeos"] = Font_new(Templeos, Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+    }
+end
+--
 local Labels = {}
 local Buttons = {}
 local Toggles = {}
@@ -92,7 +151,7 @@ local Library = {
         AccentColor = Color3.fromRGB(216, 126, 157),
         OutlineColor = Color3.fromRGB(35, 35, 35),
         FontColor = Color3.new(1, 1, 1),
-        Font = Font.fromEnum(Enum.Font.Code),
+        Font = Fonts["Pixel"],
 
         RedColor = Color3.fromRGB(255, 50, 50),
         DarkColor = Color3.new(0, 0, 0),
